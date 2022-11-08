@@ -10,9 +10,41 @@ generator client {
   provider = "prisma-client-js"
 }
 
-model Post {
+model User {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  title     String
-  tags      String[]
+  email     String   @unique
+  userName  String
+  image     String
+  createdAt DateTime @default(now())
+  Post      Post[]   @relation("ownerPost")
+  Save      Save[]
+}
+
+model Post {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  tags        String[]
+  detination  String
+  createdAt   DateTime  @default(now()) @map("created_at")
+  ownerPostId String    @db.ObjectId
+  ownerPost   User      @relation("ownerPost", fields: [ownerPostId], references: [id])
+  Comment     Comment[]
+  Save        Save[]
+}
+
+model Comment {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  text      String
   createdAt DateTime @default(now()) @map("created_at")
+  postId    String   @db.ObjectId
+  post      Post     @relation(fields: [postId], references: [id])
+}
+
+model Save {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime @default(now()) @map("created_at")
+  postId    String   @db.ObjectId
+  post      Post     @relation(fields: [postId], references: [id])
+  userId    String   @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id])
 }
