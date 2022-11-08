@@ -4,4 +4,9 @@
 
 body {
 	-webkit-font-smoothing: antialiased;
+	font-family: 'Lato', sans-serif;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+	display: none;
 }
