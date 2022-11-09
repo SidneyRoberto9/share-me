@@ -6,7 +6,7 @@ import { FcGoogle } from 'react-icons/fc';
 
 import logo from '../../assets/logowhite.png';
 
-export default function Home() {
+const Login = () => {
 	return (
 		<div className='flex justify-start items-center flex-col h-screen'>
 			<div className='relative w-full h-full'>
@@ -40,7 +40,7 @@ export default function Home() {
 			</div>
 		</div>
 	);
-}
+};
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
 	const session = await getSession(context);
@@ -60,3 +60,5 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 		},
 	};
 };
+
+export default Login;
