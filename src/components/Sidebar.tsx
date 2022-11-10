@@ -66,6 +66,19 @@ export const Sidebar = ({ user, closeToggle }: ISidebarComponentProps) => {
 					))}
 				</div>
 			</div>
+			<Link
+				href={`/profile/${user.id}`}
+				className='flex my-5 mb-3 gap-2 p-2 items-center bg-white rounded-lg shadow-lg mx-3'
+				onClick={handleCloseSidebar}>
+				<Image
+					src={user.image}
+					width={96}
+					height={96}
+					alt='user_image'
+					className='w-10 h-10 rounded-full'
+				/>
+				<p>{user.name}</p>
+			</Link>
 		</div>
 	);
 };
