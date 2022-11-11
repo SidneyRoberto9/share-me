@@ -1,35 +1,32 @@
 import { GetServerSideProps } from 'next';
-import { getSession } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
 import { useEffect, useRef, useState } from 'react';
 
+import { Category, Layout, Loading, Pins } from '../components';
+import { useAccount } from '../server/useUser';
+import { validateAuthentication } from '../utils/validateAuthentication';
+
 const Home = () => {
-	return <div>home</div>;
+	const { data } = useSession();
+	const { user, isLoading, isError } = useAccount(data?.user.email);
+
+	if (isLoading) return <Loading />;
+
+	return (
+		<Layout>
+			<Pins>
+				<Category />
+			</Pins>
+		</Layout>
+	);
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-	const sessionActive = await getSession(context);
-
-	if (!sessionActive) {
+	return validateAuthentication(context, () => {
 		return {
-			redirect: {
-				destination: '/login',
-				permanent: false,
-			},
+			props: {},
 		};
-	} else {
-		const loggedUser = await prisma.user.findUnique({
-			where: {
-				email: sessionActive.user.email,
-			},
-		});
-
-		return {
-			props: {
-				sessionActive,
-				loggedUser,
-			},
-		};
-	}
+	});
 };
 
 export default Home;
