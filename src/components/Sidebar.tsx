@@ -1,3 +1,4 @@
+import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -5,7 +6,9 @@ import React from 'react';
 import { RiHomeFill } from 'react-icons/ri';
 
 import logo from '../assets/logo.png';
-import { ISidebarComponentProps } from '../interfaces/ISidebar';
+import { ISidebarComponentProps } from '../interfaces/components/ISidebar';
+import { useAccount } from '../server/useUser';
+import { Loading } from './Loading';
 
 const categories = [
 	{ name: 'Animals' },
@@ -17,13 +20,19 @@ const categories = [
 ];
 
 const isActiveStyle =
-	'flex items-center px-5 gap-3 text-gray-500 hover:text-black transition-all duration-200 ease-in-out capitalize';
+	'flex items-center px-5 gap-3 text-gray-500 hover:text-black transition-all duration-200 ease-in-out capitalize cursor-pointer';
 
 const isNotActiveStyle =
-	'flex items-center px-5 gap-3 font-extrabold border-r-2 border-black  transition-all duration-200 ease-in-out capitalize';
+	'flex items-center px-5 gap-3 font-extrabold border-r-2 border-black  transition-all duration-200 ease-in-out capitalize cursor-pointer';
 
-export const Sidebar = ({ user, closeToggle }: ISidebarComponentProps) => {
+export const Sidebar = ({ closeToggle }: ISidebarComponentProps) => {
 	const router = useRouter();
+
+	const { data } = useSession();
+	const { user, isLoading } = useAccount(data?.user.email);
+
+	if (isLoading) return <Loading />;
+
 	const handleCloseSidebar = () => {
 		if (closeToggle) {
 			closeToggle(false);
@@ -53,14 +62,14 @@ export const Sidebar = ({ user, closeToggle }: ISidebarComponentProps) => {
 					</h3>
 					{categories.slice(0, categories.length - 1).map((category) => (
 						<Link
-							href={`/category/${category.name}`}
+							href={`/pin/${category.name}`}
+							key={category.name}
+							onClick={handleCloseSidebar}
 							className={
-								router.asPath == `/category/${category.name}`
+								router.asPath == `/pin/${category.name}`
 									? isNotActiveStyle
 									: isActiveStyle
-							}
-							key={category.name}
-							onClick={handleCloseSidebar}>
+							}>
 							{category.name}
 						</Link>
 					))}

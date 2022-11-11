@@ -5,13 +5,13 @@ import React from 'react';
 import { Layout } from '../../components';
 import { validateAuthentication } from '../../utils/validateAuthentication';
 
-const Profile = () => {
+const PinPage = () => {
 	const router = useRouter();
-	const { id } = router.query;
+	const { category } = router.query;
 
 	return (
 		<Layout>
-			<div className='text-black text-5xl'>{id}</div>
+			<div>{category}</div>
 		</Layout>
 	);
 };
@@ -24,4 +24,4 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 	});
 };
 
-export default Profile;
+export default PinPage;

@@ -1,10 +1,11 @@
 import { GetServerSideProps } from 'next';
-import { getSession, signIn } from 'next-auth/react';
+import { signIn } from 'next-auth/react';
 import Image from 'next/image';
 import React from 'react';
 import { FcGoogle } from 'react-icons/fc';
 
 import logo from '../../assets/logowhite.png';
+import { validateLoginAuthentication } from '../../utils/validateAuthentication';
 
 const Login = () => {
 	return (
@@ -29,7 +30,7 @@ const Login = () => {
 					<button
 						onClick={() =>
 							signIn('google', {
-								callbackUrl: 'http://localhost:3000',
+								callbackUrl: '/',
 							})
 						}
 						type='button'
@@ -41,24 +42,12 @@ const Login = () => {
 		</div>
 	);
 };
-
 export const getServerSideProps: GetServerSideProps = async (context) => {
-	const session = await getSession(context);
-
-	if (session) {
+	return validateLoginAuthentication(context, () => {
 		return {
-			redirect: {
-				destination: '/',
-				permanent: false,
-			},
+			props: {},
 		};
-	}
-
-	return {
-		props: {
-			session,
-		},
-	};
+	});
 };
 
 export default Login;
