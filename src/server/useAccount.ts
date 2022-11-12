@@ -1,9 +1,16 @@
+import { User } from '@prisma/client';
 import axios from 'axios';
 import useSWR from 'swr';
 
 const fetcher = (url: string) => axios.get(url);
 
-export const useAccount = (email: any) => {
+interface IUseAccountReturn {
+	user: User;
+	isLoading: boolean;
+	isError: boolean;
+}
+
+export const useAccount = (email: any): IUseAccountReturn => {
 	const { data, error } = useSWR(`/api/user/${email}`, fetcher);
 
 	return {

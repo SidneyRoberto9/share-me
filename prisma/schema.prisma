@@ -58,6 +58,7 @@ model Post {
   title       String
   tags        String[]
   detination  String
+  image       String
   createdAt   DateTime  @default(now()) @map("created_at")
   ownerPostId String    @db.ObjectId
   ownerPost   User      @relation("ownerPost", fields: [ownerPostId], references: [id])

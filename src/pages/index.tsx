@@ -1,9 +1,8 @@
 import { GetServerSideProps } from 'next';
 import { useSession } from 'next-auth/react';
-import { useEffect, useRef, useState } from 'react';
 
-import { Category, Layout, Loading, Pins } from '../components';
-import { useAccount } from '../server/useUser';
+import { Feed, Layout, Loading, Pins } from '../components';
+import { useAccount } from '../server/useAccount';
 import { validateAuthentication } from '../utils/validateAuthentication';
 
 const Home = () => {
@@ -15,7 +14,7 @@ const Home = () => {
 	return (
 		<Layout>
 			<Pins>
-				<Category />
+				<Feed categoryName='all' />
 			</Pins>
 		</Layout>
 	);

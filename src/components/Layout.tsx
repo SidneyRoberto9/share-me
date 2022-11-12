@@ -7,7 +7,7 @@ import { HiMenu } from 'react-icons/hi';
 
 import logo from '../assets/logo.png';
 import { ILayoutContainerProps } from '../interfaces/components/ILayout';
-import { useAccount } from '../server/useUser';
+import { useAccount } from '../server/useAccount';
 import { Loading } from './Loading';
 import { Sidebar } from './Sidebar';
 

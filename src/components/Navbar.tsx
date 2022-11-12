@@ -1,11 +1,11 @@
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { IoMdAdd, IoMdSearch } from 'react-icons/io';
 
 import { INavbarComponentProps } from '../interfaces/components/INavbar';
-import { useAccount } from '../server/useUser';
+import { useAccount } from '../server/useAccount';
 import { Loading } from './Loading';
 
 export const Navbar = ({
@@ -32,7 +32,7 @@ export const Navbar = ({
 				<IoMdAdd fontSize={21} className='text-gray-400' />
 			</div>
 			<div className='flex gap-3'>
-				<Link href={`/profile/${user.id}`}>
+				<Link href={`/profile/${user.id}`} className='hidden md:block'>
 					<Image
 						src={user.image}
 						alt='user'
@@ -40,6 +40,11 @@ export const Navbar = ({
 						width={96}
 						height={96}
 					/>
+				</Link>
+				<Link
+					href={`/add`}
+					className='bg-black text-white rounded-xl w-12 h-12 md:w-14 md:h-12 flex justify-center items-center'>
+					<IoMdAdd fill='white' />
 				</Link>
 			</div>
 		</div>

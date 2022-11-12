@@ -7,7 +7,7 @@ import { RiHomeFill } from 'react-icons/ri';
 
 import logo from '../assets/logo.png';
 import { ISidebarComponentProps } from '../interfaces/components/ISidebar';
-import { useAccount } from '../server/useUser';
+import { useAccount } from '../server/useAccount';
 import { Loading } from './Loading';
 
 const categories = [
@@ -62,7 +62,7 @@ export const Sidebar = ({ closeToggle }: ISidebarComponentProps) => {
 					</h3>
 					{categories.slice(0, categories.length - 1).map((category) => (
 						<Link
-							href={`/pin/${category.name}`}
+							href={`/category/${category.name}`}
 							key={category.name}
 							onClick={handleCloseSidebar}
 							className={
