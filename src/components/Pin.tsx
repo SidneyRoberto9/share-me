@@ -1,6 +1,5 @@
 import { Post } from '@prisma/client';
 import { useSession } from 'next-auth/react';
-import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
@@ -10,6 +9,7 @@ import { MdDownloadForOffline } from 'react-icons/md';
 
 import { useAccount } from '../server/useAccount';
 import { useSavedPosts } from '../server/useSavedPosts';
+import { DefaultImage } from './DefaultImage';
 import { Loading } from './Loading';
 
 interface IPinComponentProps {
@@ -59,17 +59,12 @@ export const Pin = ({ pin }: IPinComponentProps) => {
 				onMouseLeave={() => setPostHovered(false)}
 				onClick={() => router.push(`/pin-detail/${pin.id}`)}
 				className='relative cursor-zoom-in w-auto hover:shadow-lg rounded-lg overflow-hidden transition-all duration-500 ease-in-out'>
-				<Image
-					blurDataURL='data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=='
+				<DefaultImage
 					key={pin.title}
-					className='rounded-lg w-full select-none pointer-events-none'
-					alt='user-post'
 					src={pin.imageUrl}
+					classContent='rounded-lg w-full select-none pointer-events-none'
 					width={250}
 					height={250}
-					draggable={false}
-					placeholder='blur'
-					quality={100}
 				/>
 
 				{postHovered && (
@@ -135,19 +130,20 @@ export const Pin = ({ pin }: IPinComponentProps) => {
 				)}
 			</div>
 
-			<Link
-				href={`/profile/${user.id}`}
-				className='flex gap-2 mt-2 items-center'>
-				<Image
-					className='w-8 h-8 rounded-full object-cover'
-					src={user.image}
-					alt='user-profile'
-					quality={100}
-					width={96}
-					height={96}
-				/>
-				<p className='font-semibold capitalize'>{user.name}</p>
-			</Link>
+			{user && (
+				<Link
+					href={`/profile/${user.id}`}
+					className='flex gap-2 mt-2 items-center'>
+					<DefaultImage
+						src={user.image}
+						classContent='w-8 h-8 rounded-full object-cover'
+						width={96}
+						height={96}
+					/>
+
+					<p className='font-semibold capitalize'>{user.name}</p>
+				</Link>
+			)}
 		</div>
 	);
 };

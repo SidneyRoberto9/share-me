@@ -1,10 +1,10 @@
 import { GetServerSideProps } from 'next';
 import { signIn } from 'next-auth/react';
-import Image from 'next/image';
 import React from 'react';
 import { FcGoogle } from 'react-icons/fc';
 
 import logo from '../../assets/logowhite.png';
+import { DefaultImage } from '../../components';
 import { validateLoginAuthentication } from '../../utils/validateAuthentication';
 
 const Login = () => {
@@ -23,7 +23,12 @@ const Login = () => {
 
 			<div className='absolute flex flex-col justify-center items-center top-0 right-0 left-0 bottom-0 bg-blackOverlay'>
 				<div className='p-5'>
-					<Image src={logo} className='w-[130px]' alt='logo' />
+					<DefaultImage
+						src={logo}
+						classContent='w-[130px]'
+						width={96}
+						height={96}
+					/>
 				</div>
 
 				<div className='shadow-2xl'>

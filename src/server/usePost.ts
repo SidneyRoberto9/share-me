@@ -29,3 +29,37 @@ export const useUploadPost = async (file: FormData) => {
 		data,
 	};
 };
+
+export const useDeleteUploadPost = async (filename: String) => {
+	const { data } = await api.post(
+		`/api/post/delete-upload`,
+		{
+			fileName: filename,
+		},
+		{
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		}
+	);
+
+	return {
+		data,
+	};
+};
+interface IPostDto {
+	title: string;
+	destination: string;
+	category: string;
+	image: string;
+	imageName: string;
+	email: string;
+}
+
+export const useCreatePost = async (postDto: IPostDto) => {
+	const { data } = await api.post(`/api/post/add`, postDto);
+
+	return {
+		data,
+	};
+};

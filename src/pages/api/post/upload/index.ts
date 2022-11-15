@@ -1,4 +1,3 @@
-import { createReadStream, unlinkSync } from 'fs';
 import { ImgurClient } from 'imgur';
 
 import { FormidableError, parseForm } from '../../../../lib/parse-form';
@@ -15,6 +14,8 @@ export default async function postsHandler(
 	res: NextApiResponse<{
 		data: {
 			url: string | string[];
+			fileName: string | string[];
+			directory: string | string[];
 		} | null;
 		error: string | null;
 	}>
@@ -44,19 +45,21 @@ export default async function postsHandler(
 				? file.map((f) => f.newFilename)
 				: file.newFilename;
 
-			const { data } = await client.upload({
-				image: createReadStream(directory as string) as any,
-				title: fileName as string,
-				type: 'stream',
-			});
+			// const { data } = await client.upload({
+			// 	image: createReadStream(directory as string) as any,
+			// 	title: fileName as string,
+			// 	type: 'stream',
+			// });
 
-			const url = 'https://www.' + String(data.link).slice(10);
+			// const url = 'https://i.' + String(data.link).slice(10);
 
-			unlinkSync(`public/uploads/${fileName}`);
+			// unlinkSync(`public/uploads/${fileName}`);
 
 			res.status(200).json({
 				data: {
-					url,
+					url: `/uploads/${fileName}`,
+					fileName,
+					directory,
 				},
 				error: null,
 			});

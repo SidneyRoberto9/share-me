@@ -1,5 +1,4 @@
 import { useSession } from 'next-auth/react';
-import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { AiFillCloseCircle } from 'react-icons/ai';
@@ -8,6 +7,7 @@ import { HiMenu } from 'react-icons/hi';
 import logo from '../assets/logo.png';
 import { ILayoutContainerProps } from '../interfaces/components/ILayout';
 import { useAccount } from '../server/useAccount';
+import { DefaultImage } from './DefaultImage';
 import { Loading } from './Loading';
 import { Navbar } from './Navbar';
 import { Sidebar } from './Sidebar';
@@ -40,16 +40,19 @@ export const Layout = ({ children }: ILayoutContainerProps) => {
 						onClick={() => setToggleSidebar(true)}
 					/>
 					<Link href={'/'}>
-						<Image src={logo} alt='logo' className='w-28' />
+						<DefaultImage
+							src={logo}
+							classContent='w-28'
+							width={96}
+							height={96}
+						/>
 					</Link>
 
 					{user.image && (
 						<Link href={`/profile/${user.id}`}>
-							<Image
+							<DefaultImage
 								src={user.image}
-								alt='logo'
-								className='w-28'
-								quality={100}
+								classContent='w-28'
 								width={96}
 								height={96}
 							/>

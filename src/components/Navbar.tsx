@@ -1,11 +1,11 @@
 import { useSession } from 'next-auth/react';
-import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
 import { IoMdAdd, IoMdSearch } from 'react-icons/io';
 
 import { INavbarComponentProps } from '../interfaces/components/INavbar';
 import { useAccount } from '../server/useAccount';
+import { DefaultImage } from './DefaultImage';
 import { Loading } from './Loading';
 
 export const Navbar = ({
@@ -34,10 +34,9 @@ export const Navbar = ({
 			<div className='flex gap-3'>
 				{user.image && (
 					<Link href={`/profile/${user.id}`} className='hidden md:block'>
-						<Image
+						<DefaultImage
 							src={user.image}
-							alt='user'
-							className='w-14 h-12 rounded-lg cursor-pointer'
+							classContent='w-14 h-12 rounded-lg cursor-pointer'
 							width={96}
 							height={96}
 						/>

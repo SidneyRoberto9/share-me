@@ -6,4 +6,5 @@ export { Spinner } from './Spinner';
 export { Sidebar } from './Sidebar';
 export { Loading } from './Loading';
 export { UserProfile } from './UserProfile';
+export { DefaultImage } from './DefaultImage';
 export { MasonryLayout } from './MasonryLayout';

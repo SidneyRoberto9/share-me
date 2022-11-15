@@ -1,5 +1,4 @@
 import { useSession } from 'next-auth/react';
-import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
@@ -8,6 +7,7 @@ import { RiHomeFill } from 'react-icons/ri';
 import logo from '../assets/logo.png';
 import { ISidebarComponentProps } from '../interfaces/components/ISidebar';
 import { useAccount } from '../server/useAccount';
+import { DefaultImage } from './DefaultImage';
 import { Loading } from './Loading';
 
 const categories = [
@@ -46,7 +46,12 @@ export const Sidebar = ({ closeToggle }: ISidebarComponentProps) => {
 					href={'/'}
 					className='flex px-5 gap-2 my-6 pt-1 w-190 items-center'
 					onClick={handleCloseSidebar}>
-					<Image src={logo} alt='logo' className='w-full' />
+					<DefaultImage
+						src={logo}
+						classContent='w-full'
+						width={96}
+						height={96}
+					/>
 				</Link>
 
 				<div className='flex flex-col gap-5'>
@@ -75,22 +80,23 @@ export const Sidebar = ({ closeToggle }: ISidebarComponentProps) => {
 					))}
 				</div>
 			</div>
-			<Link
-				href={`/profile/${user.id}`}
-				className='flex my-5 mb-3 gap-2 p-2 items-center bg-white rounded-lg shadow-lg mx-3'
-				onClick={handleCloseSidebar}>
-				{user.image && (
-					<Image
-						src={user.image}
-						width={96}
-						height={96}
-						alt='user_image'
-						className='w-10 h-10 rounded-full'
-					/>
-				)}
+			{user && (
+				<Link
+					href={`/profile/${user.id}`}
+					className='flex my-5 mb-3 gap-2 p-2 items-center bg-white rounded-lg shadow-lg mx-3'
+					onClick={handleCloseSidebar}>
+					{user.image && (
+						<DefaultImage
+							src={user.image}
+							classContent='w-10 h-10 rounded-full'
+							width={96}
+							height={96}
+						/>
+					)}
 
-				<p>{user.name}</p>
-			</Link>
+					<p>{user.name}</p>
+				</Link>
+			)}
 		</div>
 	);
 };
