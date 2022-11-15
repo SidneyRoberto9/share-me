@@ -1,5 +1,4 @@
 export { Pin } from './Pin';
-export { Pins } from './Pins';
 export { Feed } from './Feed';
 export { Navbar } from './Navbar';
 export { Layout } from './Layout';

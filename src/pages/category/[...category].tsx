@@ -2,7 +2,7 @@ import { useRouter } from 'next/router';
 import { GetServerSideProps } from 'next/types';
 import React from 'react';
 
-import { Feed, Layout, Pins } from '../../components';
+import { Feed, Layout } from '../../components';
 import { validateAuthentication } from '../../utils/validateAuthentication';
 
 const PinPage = () => {
@@ -11,9 +11,7 @@ const PinPage = () => {
 
 	return (
 		<Layout>
-			<Pins>
-				<Feed categoryName={category[0]} />
-			</Pins>
+			<Feed categoryName={category[0]} />
 		</Layout>
 	);
 };

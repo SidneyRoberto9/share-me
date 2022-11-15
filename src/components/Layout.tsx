@@ -9,9 +9,11 @@ import logo from '../assets/logo.png';
 import { ILayoutContainerProps } from '../interfaces/components/ILayout';
 import { useAccount } from '../server/useAccount';
 import { Loading } from './Loading';
+import { Navbar } from './Navbar';
 import { Sidebar } from './Sidebar';
 
 export const Layout = ({ children }: ILayoutContainerProps) => {
+	const [searchTerm, setSearchTerm] = useState('');
 	const [toggleSidebar, setToggleSidebar] = useState(false);
 	const scrollRef = useRef(null);
 
@@ -70,7 +72,13 @@ export const Layout = ({ children }: ILayoutContainerProps) => {
 			</div>
 
 			<div className='pb-2 flex-1 h-screen overflow-y-scroll' ref={scrollRef}>
-				{children}
+				<div className='px-2 md:px-5'>
+					<div className='bg-gray-50'>
+						<Navbar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+					</div>
+
+					<div className='h-full'>{children}</div>
+				</div>
 			</div>
 		</div>
 	);
