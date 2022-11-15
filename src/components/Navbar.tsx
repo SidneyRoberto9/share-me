@@ -32,15 +32,18 @@ export const Navbar = ({
 				<IoMdAdd fontSize={21} className='text-gray-400' />
 			</div>
 			<div className='flex gap-3'>
-				<Link href={`/profile/${user.id}`} className='hidden md:block'>
-					<Image
-						src={user.image}
-						alt='user'
-						className='w-14 h-12 rounded-lg cursor-pointer'
-						width={96}
-						height={96}
-					/>
-				</Link>
+				{user.image && (
+					<Link href={`/profile/${user.id}`} className='hidden md:block'>
+						<Image
+							src={user.image}
+							alt='user'
+							className='w-14 h-12 rounded-lg cursor-pointer'
+							width={96}
+							height={96}
+						/>
+					</Link>
+				)}
+
 				<Link
 					href={`/add`}
 					className='bg-black text-white rounded-xl w-12 h-12 md:w-14 md:h-12 flex justify-center items-center'>

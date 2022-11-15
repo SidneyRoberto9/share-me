@@ -28,8 +28,8 @@ export default async function postsHandler(
 						title: {
 							contains: categoryName,
 						},
-						tags: {
-							has: categoryName,
+						category: {
+							contains: categoryName,
 						},
 					},
 					orderBy: {

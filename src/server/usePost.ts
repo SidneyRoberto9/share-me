@@ -11,7 +11,7 @@ interface IUsePostReturn {
 }
 
 export const usePost = (categoryName: string): IUsePostReturn => {
-	const { data, error } = useSWR(`/api/pin-post/${categoryName}`, fetcher);
+	const { data, error } = useSWR(`/api/post/${categoryName}`, fetcher);
 
 	return {
 		posts: data?.data.posts,

@@ -41,16 +41,18 @@ export const Layout = ({ children }: ILayoutContainerProps) => {
 						<Image src={logo} alt='logo' className='w-28' />
 					</Link>
 
-					<Link href={`/profile/${user.id}`}>
-						<Image
-							src={user.image}
-							alt='logo'
-							className='w-28'
-							quality={100}
-							width={96}
-							height={96}
-						/>
-					</Link>
+					{user.image && (
+						<Link href={`/profile/${user.id}`}>
+							<Image
+								src={user.image}
+								alt='logo'
+								className='w-28'
+								quality={100}
+								width={96}
+								height={96}
+							/>
+						</Link>
+					)}
 				</div>
 
 				{toggleSidebar && (

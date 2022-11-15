@@ -14,9 +14,5 @@ export const Feed = ({ categoryName }: IFeedComponentProps) => {
 	if (isLoading)
 		return <Spinner message='We are adding new ideas to your feed!' />;
 
-	return (
-		<div>
-			<MasonryLayout pins={posts} />
-		</div>
-	);
+	return <MasonryLayout pins={posts} />;
 };
