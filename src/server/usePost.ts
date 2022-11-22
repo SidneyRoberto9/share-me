@@ -12,6 +12,15 @@ interface IUsePostReturn {
 	isError: boolean;
 }
 
+interface IPostDto {
+	title: string;
+	destination: string;
+	category: string;
+	image: string;
+	imageName: string;
+	email: string;
+}
+
 export const usePost = (categoryName: string): IUsePostReturn => {
 	const { data, error } = useSWR(`/api/post/${categoryName}`, fetcher);
 
@@ -53,19 +62,31 @@ export const useDeleteUploadPost = async (filename: String) => {
 		data,
 	};
 };
-interface IPostDto {
-	title: string;
-	destination: string;
-	category: string;
-	image: string;
-	imageName: string;
-	email: string;
-}
 
 export const useCreatePost = async (postDto: IPostDto) => {
 	const { data } = await api.post(`/api/post/add`, postDto);
 
 	return {
 		data,
+	};
+};
+
+export const useGetPostById = (postId: string) => {
+	const { data, error } = useSWR(`/api/post/find/${postId}`, fetcher);
+
+	return {
+		post: data?.data.data,
+		isLoading: !error && !data?.data,
+		isError: error,
+	};
+};
+
+export const useGetCommentsByPost = (postId: string) => {
+	const { data, error } = useSWR(`/api/post/comments/${postId}`, fetcher);
+
+	return {
+		comments: data?.data.comments,
+		isLoading: !error && !data?.data,
+		isError: error,
 	};
 };

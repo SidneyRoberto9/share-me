@@ -1,20 +1,22 @@
-import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/router';
 import { GetServerSideProps } from 'next/types';
 import React from 'react';
 
-import { Layout, Loading, UserProfile } from '../../components';
-import { useAccount } from '../../server/useAccount';
+import { Layout, Loading, PinDetails } from '../../components';
+import { useGetPostById } from '../../server/usePost';
 import { validateAuthentication } from '../../utils/validateAuthentication';
 
-const Profile = () => {
-	const { data } = useSession();
-	const { user, isLoading, isError } = useAccount(data?.user.email);
+const PinDetail = () => {
+	const router = useRouter();
+	const { id } = router.query;
+	const { post, isLoading } = useGetPostById(id as string);
+	console.log(post);
 
 	if (isLoading) return <Loading />;
 
 	return (
 		<Layout>
-			<UserProfile user={user} />
+			<PinDetails pin={post} />
 		</Layout>
 	);
 };
@@ -27,4 +29,4 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 	});
 };
 
-export default Profile;
+export default PinDetail;
