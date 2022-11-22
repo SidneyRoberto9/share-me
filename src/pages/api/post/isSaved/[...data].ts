@@ -1,4 +1,4 @@
-import { prisma } from './../../../../lib/prisma';
+import { prisma } from '../../../../lib/prisma';
 
 import type { NextApiRequest, NextApiResponse } from 'next';
 
@@ -8,45 +8,29 @@ export default async function postsHandler(
 ) {
 	const { method } = req;
 
-	const { postId, userEmail } = req.body;
+	const { data } = req.query;
 
 	switch (method) {
-		case 'POST':
+		case 'GET':
 			const user = await prisma.user.findUnique({
 				where: {
-					email: userEmail,
+					email: data[1],
 				},
 			});
 
 			const isSavedPost = await prisma.save.findUnique({
 				where: {
 					postId_userId: {
-						postId,
+						postId: data[0],
 						userId: user.id,
 					},
 				},
 			});
 
 			if (isSavedPost == null) {
-				await prisma.save.create({
-					data: {
-						postId: postId,
-						userId: user.id,
-					},
-				});
-
-				res.status(200).json({ message: 'ok' });
+				res.status(200).json({ data: false });
 			} else {
-				await prisma.save.delete({
-					where: {
-						postId_userId: {
-							postId,
-							userId: user.id,
-						},
-					},
-				});
-
-				res.status(200).json({ message: 'ok' });
+				res.status(200).json({ data: true });
 			}
 
 			break;

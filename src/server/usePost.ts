@@ -22,6 +22,12 @@ export const usePost = (categoryName: string): IUsePostReturn => {
 	};
 };
 
+export const useDeletePost = async (postId: string) => {
+	await api.get(`/api/post/delete/${postId}`);
+
+	return;
+};
+
 export const useUploadPost = async (file: FormData) => {
 	const { data } = await api.post(`/api/post/upload`, file);
 

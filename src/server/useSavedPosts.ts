@@ -12,6 +12,11 @@ interface IUsePostReturn {
 	isLoading: boolean;
 	isError: boolean;
 }
+interface ISavedPostReturn {
+	value: boolean;
+	isLoading: boolean;
+	isError: boolean;
+}
 
 interface ISavePostDto {
 	postId: string;
@@ -34,6 +39,19 @@ export class useSavedPosts {
 
 		return {
 			posts: data?.data,
+		};
+	};
+
+	isSavedPost = (dto: ISavePostDto): ISavedPostReturn => {
+		const { data, error } = useSWR(
+			`/api/post/isSaved/${dto.postId}/${dto.userEmail}`,
+			fetcherGet
+		);
+
+		return {
+			value: data?.data.data,
+			isLoading: !error && !data?.data,
+			isError: error,
 		};
 	};
 }

@@ -19,9 +19,17 @@ export default async function postsHandler(
 				},
 			});
 
-			const savedPostsByUserId = await prisma.save.findMany({
+			const savesByUserId = await prisma.save.findMany({
 				where: {
 					userId: user.id,
+				},
+			});
+
+			const savedPostsByUserId = await prisma.post.findMany({
+				where: {
+					id: {
+						in: savesByUserId.map((save) => save.postId),
+					},
 				},
 				orderBy: {
 					createdAt: 'desc',
