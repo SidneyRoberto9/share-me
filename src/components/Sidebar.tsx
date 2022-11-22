@@ -49,8 +49,8 @@ export const Sidebar = ({ closeToggle }: ISidebarComponentProps) => {
 					<DefaultImage
 						src={logo}
 						classContent='w-full'
-						width={96}
-						height={96}
+						width={500}
+						height={500}
 					/>
 				</Link>
 

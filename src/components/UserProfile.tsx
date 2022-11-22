@@ -1,5 +1,10 @@
+import { User } from '@prisma/client';
 import React from 'react';
 
-export const UserProfile = () => {
-	return <div>UserProfile</div>;
+interface IUserProfileComponentProps {
+	user: User;
+}
+
+export const UserProfile = ({ user }: IUserProfileComponentProps) => {
+	return <div>{user.id}</div>;
 };

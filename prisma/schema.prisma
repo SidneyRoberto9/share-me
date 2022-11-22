@@ -49,6 +49,7 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
+  comment       Comment[]
   posts         Post[]
   save          Save[]
 }
@@ -73,6 +74,8 @@ model Comment {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   text      String
   createdAt DateTime @default(now()) @map("created_at")
+  authorId  String   @db.ObjectId
+  author    User     @relation(fields: [authorId], references: [id])
   postId    String   @db.ObjectId
   post      Post     @relation(fields: [postId], references: [id])
 }

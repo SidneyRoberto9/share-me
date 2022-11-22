@@ -29,7 +29,6 @@ export const Navbar = ({
 					onFocus={(e) => e.target.select()}
 					className='p-2 w-full bg-white outline-none '
 				/>
-				<IoMdAdd fontSize={21} className='text-gray-400' />
 			</div>
 			<div className='flex gap-3'>
 				{user.image && (

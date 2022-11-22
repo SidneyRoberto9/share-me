@@ -43,8 +43,8 @@ export const Layout = ({ children }: ILayoutContainerProps) => {
 						<DefaultImage
 							src={logo}
 							classContent='w-28'
-							width={96}
-							height={96}
+							width={500}
+							height={500}
 						/>
 					</Link>
 
