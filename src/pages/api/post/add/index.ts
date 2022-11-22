@@ -1,4 +1,5 @@
-import { createReadStream, unlinkSync } from 'fs';
+import { createReadStream } from 'fs';
+import { unlink } from 'fs/promises';
 import { ImgurClient } from 'imgur';
 
 import type { NextApiRequest, NextApiResponse } from 'next';
@@ -22,42 +23,38 @@ export default async function postsHandler(
 	}
 
 	if (req.method === 'POST') {
-		try {
-			const { title, destination, category, image, imageName, email } =
-				req.body;
-			const imagePath = `public/uploads/${imageName}`;
+		const { title, destination, category, image, imageName, email } = req.body;
+		const user = await prisma.user.findUnique({
+			where: {
+				email: email,
+			},
+		});
 
-			const { data } = await client.upload({
-				image: createReadStream(image) as any,
+		const imagePath = `public/uploads/${imageName}`;
+
+		const { data } = await client.upload({
+			image: createReadStream(image) as any,
+			title: title,
+			type: 'stream',
+		});
+
+		const url: string = 'https://i.' + String(data.link).slice(10);
+
+		await unlink(imagePath);
+
+		const post = await prisma.post.create({
+			data: {
 				title: title,
-				type: 'stream',
-			});
+				destination: destination,
+				category: category,
+				imageUrl: url,
+				authorId: user.id,
+				imageHash: data.deletehash,
+			},
+		});
 
-			const url: string = 'https://i.' + String(data.link).slice(10);
-
-			unlinkSync(imagePath);
-
-			const user = await prisma.user.findUnique({
-				where: {
-					email: email,
-				},
-			});
-
-			const post = await prisma.post.create({
-				data: {
-					title,
-					destination,
-					category,
-					imageUrl: url,
-					authorId: user.id,
-				},
-			});
-
-			res.status(200).json({
-				data: post,
-			});
-		} catch (e) {
-			res.status(500).json({ data: null, error: 'Internal Server Error' });
-		}
+		res.status(200).json({
+			data: post,
+		});
 	}
 }

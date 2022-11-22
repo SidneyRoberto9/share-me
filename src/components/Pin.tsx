@@ -35,6 +35,7 @@ export const Pin = ({ pin }: IPinComponentProps) => {
 
 	useEffect(() => {
 		setAlreadySaved(value);
+		console.log(pin.imageUrl.slice(20).split('.')[0]);
 	}, [value]);
 
 	if (loading || isLoading) return <Loading />;

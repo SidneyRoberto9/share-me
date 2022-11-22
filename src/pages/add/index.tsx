@@ -23,7 +23,10 @@ const Add = () => {
 	const router = useRouter();
 
 	const { data } = useSession();
-	const { user, isLoading, isError } = useAccount(data?.user.email);
+	const { user, isLoading } = useAccount(data?.user.email);
+
+	if (isLoading) return <Loading />;
+
 	const imageTypes = [
 		'image/png',
 		'image/svg',
@@ -75,10 +78,10 @@ const Add = () => {
 			router.push('/');
 		} else {
 			setFields(true);
+
+			setTimeout(() => setFields(false), 3000);
 		}
 	};
-
-	if (isLoading) return <Loading />;
 
 	return (
 		<Layout>
