@@ -1,11 +1,14 @@
-import { Post } from '@prisma/client';
 import React from 'react';
 import Masonry from 'react-masonry-css';
 
+import { IPostFull } from '../interfaces/posts';
+import { IUserFull } from '../interfaces/user';
 import { Pin } from './Pin';
 
 interface IMasonryLayoutComponentProps {
-	pins: Post[];
+	user: IUserFull;
+	posts: IPostFull[];
+	refresh: () => void;
 }
 
 const breakPointObj = {
@@ -17,11 +20,15 @@ const breakPointObj = {
 	500: 1,
 };
 
-export const MasonryLayout = ({ pins }: IMasonryLayoutComponentProps) => {
+export const MasonryLayout = ({
+	user,
+	posts,
+	refresh,
+}: IMasonryLayoutComponentProps) => {
 	return (
 		<Masonry className='flex animate-slide-fwd' breakpointCols={breakPointObj}>
-			{pins?.map((pin) => {
-				return <Pin pin={pin} key={pin.id} />;
+			{posts.map((pin) => {
+				return <Pin post={pin} user={user} refresh={refresh} key={pin.id} />;
 			})}
 		</Masonry>
 	);

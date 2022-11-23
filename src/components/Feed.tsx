@@ -1,18 +1,15 @@
 import React, { useState } from 'react';
 
-import { usePost } from '../server/usePost';
+import { IPostFull } from '../interfaces/posts';
+import { IUserFull } from '../interfaces/user';
 import { MasonryLayout } from './MasonryLayout';
-import { Spinner } from './Spinner';
 
 interface IFeedComponentProps {
-	categoryName: string;
+	user: IUserFull;
+	posts: IPostFull[];
+	refresh: () => void;
 }
 
-export const Feed = ({ categoryName }: IFeedComponentProps) => {
-	const { posts, isLoading, isError } = usePost(categoryName);
-
-	if (isLoading)
-		return <Spinner message='We are adding new ideas to your feed!' />;
-
-	return <MasonryLayout pins={posts} />;
+export const Feed = ({ user, posts, refresh }: IFeedComponentProps) => {
+	return <MasonryLayout posts={posts} user={user} refresh={refresh} />;
 };

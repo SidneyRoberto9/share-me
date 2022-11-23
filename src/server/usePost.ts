@@ -1,13 +1,13 @@
-import { Post } from '@prisma/client';
 import axios from 'axios';
 import useSWR from 'swr';
 
+import { IPostFull } from '../interfaces/posts';
 import { api } from './../lib/axios';
 
 const fetcher = (url: string) => axios.get(url);
 
 interface IUsePostReturn {
-	posts: Post[];
+	posts: IPostFull[];
 	isLoading: boolean;
 	isError: boolean;
 }
@@ -21,8 +21,8 @@ interface IPostDto {
 	email: string;
 }
 
-export const usePost = (categoryName: string): IUsePostReturn => {
-	const { data, error } = useSWR(`/api/post/${categoryName}`, fetcher);
+export const useGetPosts = (): IUsePostReturn => {
+	const { data, error } = useSWR(`/api/post/`, fetcher);
 
 	return {
 		posts: data?.data.posts,
@@ -81,12 +81,17 @@ export const useGetPostById = (postId: string) => {
 	};
 };
 
-export const useGetCommentsByPost = (postId: string) => {
-	const { data, error } = useSWR(`/api/post/comments/${postId}`, fetcher);
+export const useAddComment = async (
+	postId: string,
+	comment: string,
+	userId: string
+) => {
+	const { data } = await api.post(`/api/post/comment/${postId}`, {
+		comment,
+		userId,
+	});
 
 	return {
-		comments: data?.data.comments,
-		isLoading: !error && !data?.data,
-		isError: error,
+		data,
 	};
 };

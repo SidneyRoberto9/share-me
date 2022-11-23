@@ -1,35 +1,40 @@
-import { Post } from '@prisma/client';
-import { useSession } from 'next-auth/react';
 import Link from 'next/link';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { MdDownloadForOffline } from 'react-icons/md';
 
-import { useAccount } from '../server/useAccount';
-import { useGetCommentsByPost } from '../server/usePost';
+import { IPostFull } from '../interfaces/posts';
+import { IUserFull } from '../interfaces/user';
+import { useAddComment, useGetPosts } from '../server/usePost';
 import { DefaultImage } from './DefaultImage';
 import { Loading } from './Loading';
 import { MasonryLayout } from './MasonryLayout';
 import { Spinner } from './Spinner';
 
 interface IPinDatailsComponent {
-	pin: Post;
+	post: IPostFull;
+	user: IUserFull;
+	refreshData: () => void;
 }
 
-export const PinDetails = ({ pin }: IPinDatailsComponent) => {
+export const PinDetails = ({
+	post,
+	user,
+	refreshData,
+}: IPinDatailsComponent) => {
 	const [comment, setComment] = useState<string>('');
 	const [addingComment, setAddingComment] = useState(null);
-	const [pins, setPins] = useState<Post[]>([]);
 
-	const { data } = useSession();
-	const userEmail = data?.user?.email;
+	const { posts, isLoading } = useGetPosts();
 
-	const { user, isLoading } = useAccount(userEmail);
-	const { comments, isLoading: loading } = useGetCommentsByPost(pin.id);
+	if (isLoading) return <Loading />;
 
-	if (isLoading || loading) return <Loading />;
-
-	const addComment = () => {
+	const addComment = async () => {
 		if (comment) {
+			setAddingComment(true);
+			await useAddComment(post.id, comment, user.id);
+			refreshData();
+			setComment('');
+			setAddingComment(false);
 		}
 	};
 
@@ -39,11 +44,11 @@ export const PinDetails = ({ pin }: IPinDatailsComponent) => {
 				className='flex xl-flex-row flex-col m-auto bg-white'
 				style={{ maxWidth: '1500px', borderRadius: '32px' }}>
 				<div className='flex justify-center items-center md:items-start flex-initial'>
-					{pin.imageUrl && (
+					{post.imageUrl && (
 						<DefaultImage
-							key={pin.title}
-							src={pin.imageUrl}
-							classContent='rounded-t-3xl rounded-b-lg select-none pointer-events-none w-auto'
+							key={post.title}
+							src={post.imageUrl}
+							classContent='rounded-t-3xl rounded-b-lg select-none pointer-events-none w-auto mt-2'
 							width={350}
 							height={250}
 						/>
@@ -53,20 +58,25 @@ export const PinDetails = ({ pin }: IPinDatailsComponent) => {
 					<div className='flex items-center justify-between'>
 						<div className='flex gap-2 items-center'>
 							<a
-								href={pin.imageUrl}
-								download={pin.title}
+								href={post.imageUrl}
+								download={post.title}
 								target='_blank'
 								onClick={(e) => e.stopPropagation()}
 								className='bg-white w-9 h-9 p-2 rounded-full flex items-center justify-center text-dark text-xl opacity-75 hover:opacity-100 hover:shadow-md outline-none'>
 								<MdDownloadForOffline />
 							</a>
 						</div>
-						<a href={pin.destination} target='_blank' rel='noopener noreferrer'>
-							{pin.destination}
+						<a
+							href={post.destination}
+							target='_blank'
+							rel='noopener noreferrer'>
+							{post.destination}
 						</a>
 					</div>
 					<div>
-						<h1 className='text-4xl font-bold break-words mt-3'>{pin.title}</h1>
+						<h1 className='text-4xl font-bold break-words mt-3'>
+							{post.title}
+						</h1>
 					</div>
 					{user && (
 						<Link
@@ -82,21 +92,22 @@ export const PinDetails = ({ pin }: IPinDatailsComponent) => {
 							<p className='font-semibold capitalize'>{user.name}</p>
 						</Link>
 					)}
+
 					<h2 className='mt-5 text-2xl'>Comments</h2>
 					<div className='max-h-370 overflow-y-auto'>
-						{comments.map((comment, index) => (
+						{post.comment.map((comment, index) => (
 							<div
 								className='flex gap-2 mt-5 items-center bg-white rounded-lg'
 								key={index}>
 								<DefaultImage
-									src={user.image}
+									src={comment.author.image}
 									classContent='w-10 h-10 rounded-full object-cover cursor-pointer'
 									width={96}
 									height={96}
 								/>
 								<div className='flex flex-col'>
-									<p className='font-bold capitalize'>{user.name}</p>
-									<p className='text-sm'>{comment.content}</p>
+									<p className='font-bold capitalize'>{comment.author.name}</p>
+									<p className='text-sm'>{comment.text}</p>
 								</div>
 							</div>
 						))}
@@ -130,12 +141,12 @@ export const PinDetails = ({ pin }: IPinDatailsComponent) => {
 				</div>
 			</div>
 
-			{pins?.length > 0 ? (
+			{posts?.length > 0 ? (
 				<>
 					<h2 className='text-center font-bold text-2x mt-8 mb-4'>
 						More Like this
 					</h2>
-					<MasonryLayout pins={pins} />
+					<MasonryLayout posts={posts} user={user} refresh={refreshData} />
 				</>
 			) : (
 				<Spinner message='Loading more pins' />

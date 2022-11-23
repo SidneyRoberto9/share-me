@@ -19,3 +19,13 @@ export const useAccount = (email: any): IUseAccountReturn => {
 		isError: error,
 	};
 };
+
+export const useAccountId = (id: any): IUseAccountReturn => {
+	const { data, error } = useSWR(`/api/user/id/${id}`, fetcher);
+
+	return {
+		user: data?.data,
+		isLoading: !error && !data?.data,
+		isError: error,
+	};
+};

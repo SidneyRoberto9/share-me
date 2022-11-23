@@ -1,16 +1,17 @@
-import { GetServerSideProps } from 'next';
 import { getSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { GetServerSideProps } from 'next/types';
+import React from 'react';
 
-import { Feed, Layout, Loading } from '../components';
-import { IPostFull } from '../interfaces/posts';
-import { IUserFull } from '../interfaces/user';
-import { validateAuthentication } from '../utils/validateAuthentication';
+import { Feed, Layout, Loading } from '../../components';
+import { IPostFull } from '../../interfaces/posts';
+import { IUserFull } from '../../interfaces/user';
+import { validateAuthentication } from '../../utils/validateAuthentication';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
 	return validateAuthentication(context, async () => {
 		const sessionActive = await getSession(context);
+		const { category } = context.query;
 
 		const loggedUser: IUserFull = await prisma.user.findUnique({
 			where: {
@@ -35,9 +36,18 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 		});
 
 		const returnedPosts: IPostFull[] = await prisma.post.findMany({
+			where: {
+				title: {
+					contains: category as string,
+				},
+				category: {
+					contains: category as string,
+				},
+			},
 			orderBy: {
 				createdAt: 'desc',
 			},
+
 			include: {
 				author: true,
 				comment: {
@@ -64,12 +74,12 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 	});
 };
 
-interface HomeProps {
+interface CategoryProps {
 	userData: string;
 	postData: string;
 }
 
-const Home = ({ userData, postData }: HomeProps) => {
+const PinPage = ({ postData, userData }: CategoryProps) => {
 	if (!userData || !postData) return <Loading />;
 
 	const user: IUserFull = JSON.parse(userData);
@@ -84,4 +94,4 @@ const Home = ({ userData, postData }: HomeProps) => {
 	);
 };
 
-export default Home;
+export default PinPage;

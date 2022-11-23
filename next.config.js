@@ -3,7 +3,12 @@ const nextConfig = {
 	reactStrictMode: false,
 	swcMinify: true,
 	images: {
-		domains: ['lh3.googleusercontent.com', 'i.imgur.com', ''],
+		domains: [
+			'lh3.googleusercontent.com',
+			'i.imgur.com',
+			'',
+			'source.unsplash.com',
+		],
 	},
 	redirects: async () => {
 		return [

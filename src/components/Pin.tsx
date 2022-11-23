@@ -1,5 +1,3 @@
-import { Post } from '@prisma/client';
-import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
@@ -7,56 +5,46 @@ import { AiTwotoneDelete } from 'react-icons/ai';
 import { BsFillArrowUpRightCircleFill } from 'react-icons/bs';
 import { MdDownloadForOffline } from 'react-icons/md';
 
-import { useAccount } from '../server/useAccount';
+import { IPostFull } from '../interfaces/posts';
+import { IUserFull } from '../interfaces/user';
 import { useDeletePost } from '../server/usePost';
 import { useSavedPosts } from '../server/useSavedPosts';
 import { DefaultImage } from './DefaultImage';
-import { Loading } from './Loading';
 
 interface IPinComponentProps {
-	pin: Post;
+	post: IPostFull;
+	user: IUserFull;
+	refresh: () => void;
 }
 
-export const Pin = ({ pin }: IPinComponentProps) => {
+export const Pin = ({ post, user, refresh }: IPinComponentProps) => {
 	const useSaved = new useSavedPosts();
 	const router = useRouter();
-	const { data } = useSession();
 
-	const [alreadySaved, setAlreadySaved] = useState(null);
+	const [alreadySaved, setAlreadySaved] = useState(
+		user.save.find((item) => item.postId === post.id) ? true : false
+	);
 	const [postHovered, setPostHovered] = useState(false);
-
-	const userEmail = data?.user?.email;
-
-	const { user, isLoading } = useAccount(userEmail);
-	const { value, isLoading: loading } = useSaved.isSavedPost({
-		postId: pin.id,
-		userEmail: userEmail,
-	});
-
-	useEffect(() => {
-		setAlreadySaved(value);
-		console.log(pin.imageUrl.slice(20).split('.')[0]);
-	}, [value]);
-
-	if (loading || isLoading) return <Loading />;
 
 	const savePost = async () => {
 		setAlreadySaved(!alreadySaved);
 		if (!alreadySaved) {
 			await useSaved.savePost({
-				postId: pin.id,
-				userEmail: userEmail,
+				postId: post.id,
+				userEmail: user.email,
 			});
 		} else {
 			await useSaved.savePost({
-				postId: pin.id,
-				userEmail: userEmail,
+				postId: post.id,
+				userEmail: user.email,
 			});
 		}
+		refresh();
 	};
 
 	const deletePost = async () => {
-		await useDeletePost(pin.id);
+		await useDeletePost(post.id);
+		refresh();
 		window.location.reload();
 	};
 
@@ -65,12 +53,12 @@ export const Pin = ({ pin }: IPinComponentProps) => {
 			<div
 				onMouseEnter={() => setPostHovered(true)}
 				onMouseLeave={() => setPostHovered(false)}
-				onClick={() => router.push(`/pin-detail/${pin.id}`)}
+				onClick={() => router.push(`/pin-detail/${post.id}`)}
 				className='relative cursor-zoom-in w-auto hover:shadow-lg rounded-lg overflow-hidden transition-all duration-500 ease-in-out'>
-				{pin.imageUrl && (
+				{post.imageUrl && (
 					<DefaultImage
-						key={pin.title}
-						src={pin.imageUrl}
+						key={post.title}
+						src={post.imageUrl}
 						classContent='rounded-lg w-full select-none pointer-events-none'
 						width={250}
 						height={250}
@@ -84,8 +72,8 @@ export const Pin = ({ pin }: IPinComponentProps) => {
 						<div className='flex items-center justify-between'>
 							<div className='flex gap-2'>
 								<a
-									href={pin.imageUrl}
-									download={pin.title}
+									href={post.imageUrl}
+									download={post.title}
 									target='_blank'
 									onClick={(e) => e.stopPropagation()}
 									className='bg-white w-9 h-9 p-2 rounded-full flex items-center justify-center text-dark text-xl opacity-75 hover:opacity-100 hover:shadow-md outline-none'>
@@ -117,22 +105,19 @@ export const Pin = ({ pin }: IPinComponentProps) => {
 						</div>
 
 						<div className='flex justify-between items-center gap-2 w-full'>
-							{pin.destination && (
+							{post.destination && (
 								<a
-									href={pin.destination}
+									href={post.destination}
 									onClick={(e) => {
 										e.stopPropagation();
 									}}
 									target='_blank'
 									rel='noreferrer'
-									className='bg-white flex items-center gap-2 text-black font-bold p-2 pl-4 pr-4 rounded-full opacity-70 hover:100 hover:shadow-md'>
+									className='bg-white p-2 rounded-full w-8 h-8 flex items-center justify-center text-dark opacity-75 hover:opacity-100 outline-none'>
 									<BsFillArrowUpRightCircleFill />
-									{pin.destination.length > 20
-										? pin.destination.slice(8, 20)
-										: pin.destination.slice(8)}
 								</a>
 							)}
-							{pin.authorId === user.id && (
+							{post.authorId === user.id && (
 								<button
 									type='button'
 									onClick={(e) => {
@@ -147,20 +132,19 @@ export const Pin = ({ pin }: IPinComponentProps) => {
 					</div>
 				)}
 			</div>
-			{user && (
-				<Link
-					href={`/profile/${user.id}`}
-					className='flex gap-2 mt-2 items-center'>
-					<DefaultImage
-						src={user.image}
-						classContent='w-8 h-8 rounded-full object-cover'
-						width={96}
-						height={96}
-					/>
 
-					<p className='font-semibold capitalize'>{user.name}</p>
-				</Link>
-			)}
+			<Link
+				href={`/profile/${post.author.id}`}
+				className='flex gap-2 mt-2 items-center'>
+				<DefaultImage
+					src={post.author.image}
+					classContent='w-8 h-8 rounded-full object-cover'
+					width={96}
+					height={96}
+				/>
+
+				<p className='font-semibold capitalize'>{post.author.name}</p>
+			</Link>
 		</div>
 	);
 };

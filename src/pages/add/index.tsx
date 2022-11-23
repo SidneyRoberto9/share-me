@@ -63,10 +63,16 @@ const Add = () => {
 	const handleSavePin = async () => {
 		if (title && destination && imageAsset && category) {
 			setFields(false);
+			let direct = destination;
+			if (destination.includes('http://') || destination.includes('https://')) {
+				direct = destination;
+			} else {
+				direct = `https://${destination}`;
+			}
 
 			const postData = {
 				title,
-				destination,
+				destination: direct,
 				category,
 				image: imageAsset.directory,
 				imageName: imageAsset.fileName,
