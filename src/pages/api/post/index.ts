@@ -14,7 +14,6 @@ export default async function postsHandler(
 					createdAt: 'desc',
 				},
 				include: {
-					author: true,
 					comment: {
 						include: {
 							author: true,
@@ -25,6 +24,13 @@ export default async function postsHandler(
 						include: {
 							user: true,
 							post: true,
+						},
+					},
+					author: {
+						include: {
+							comment: true,
+							posts: true,
+							save: true,
 						},
 					},
 				},
