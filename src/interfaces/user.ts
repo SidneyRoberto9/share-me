@@ -1,14 +1,16 @@
-import { Post, User } from '@prisma/client';
+import { Comment, Post, Save, User } from '@prisma/client';
+
+import { IPostFull } from './posts';
 
 export type IUserFull = {
 	id: string;
-	name: string | null;
-	email: string | null;
-	emailVerified: Date | null;
-	image: string | null;
-	posts: Post[] | null;
-	comment: ICommentFull[] | null;
-	save: ISaveFull[] | null;
+	name: string;
+	email: string;
+	emailVerified: Date;
+	image: string;
+	posts: IPostFull[];
+	comment: ICommentFull[];
+	save: ISaveFull[];
 };
 
 export type ICommentFull = {
@@ -28,4 +30,15 @@ export type ISaveFull = {
 	userId: string;
 	post: Post;
 	user: User;
+};
+
+export type IUserFullWithout = {
+	id: string;
+	name: string;
+	email: string;
+	emailVerified: Date;
+	image: string;
+	posts: Post[];
+	comment: Comment[];
+	save: Save[];
 };

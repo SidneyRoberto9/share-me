@@ -6,6 +6,7 @@ import React from 'react';
 import { Feed, Layout, Loading } from '../../components';
 import { IPostFull } from '../../interfaces/posts';
 import { IUserFull } from '../../interfaces/user';
+import { getFullUserWithEmail } from '../../server/useAccount';
 import { validateAuthentication } from '../../utils/validateAuthentication';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
@@ -13,33 +14,12 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 		const sessionActive = await getSession(context);
 		const { category } = context.query;
 
-		const loggedUser: IUserFull = await prisma.user.findUnique({
-			where: {
-				email: sessionActive.user.email,
-			},
-
-			include: {
-				posts: true,
-				comment: {
-					include: {
-						author: true,
-						post: true,
-					},
-				},
-				save: {
-					include: {
-						user: true,
-						post: true,
-					},
-				},
-			},
-		});
+		const loggedUser: IUserFull = await getFullUserWithEmail(
+			sessionActive.user.email
+		);
 
 		const returnedPosts: IPostFull[] = await prisma.post.findMany({
 			where: {
-				title: {
-					contains: category as string,
-				},
 				category: {
 					contains: category as string,
 				},
@@ -47,9 +27,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 			orderBy: {
 				createdAt: 'desc',
 			},
-
 			include: {
-				author: true,
 				comment: {
 					include: {
 						author: true,
@@ -60,6 +38,13 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 					include: {
 						user: true,
 						post: true,
+					},
+				},
+				author: {
+					include: {
+						comment: true,
+						posts: true,
+						save: true,
 					},
 				},
 			},

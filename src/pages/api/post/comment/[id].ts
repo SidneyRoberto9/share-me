@@ -10,7 +10,6 @@ export default async function postsHandler(
 	const { id } = req.query;
 
 	const { comment, userId } = req.body;
-	console.log(id);
 
 	switch (method) {
 		case 'POST':

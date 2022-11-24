@@ -1,5 +1,6 @@
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import React from 'react';
 import { IoMdAdd, IoMdSearch } from 'react-icons/io';
 
@@ -14,6 +15,7 @@ export const Navbar = ({
 }: INavbarComponentProps) => {
 	const { data } = useSession();
 	const { user, isLoading } = useAccount(data?.user.email);
+	const router = useRouter();
 
 	if (isLoading) return <Loading />;
 
@@ -26,7 +28,7 @@ export const Navbar = ({
 					onChange={(e) => setSearchTerm(e.target.value)}
 					placeholder='Search'
 					value={searchTerm}
-					onFocus={(e) => e.target.select()}
+					onFocus={(e) => router.push('/search')}
 					className='p-2 w-full bg-white outline-none '
 				/>
 			</div>

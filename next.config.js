@@ -4,10 +4,11 @@ const nextConfig = {
 	swcMinify: true,
 	images: {
 		domains: [
-			'lh3.googleusercontent.com',
-			'i.imgur.com',
 			'',
+			'i.imgur.com',
+			'i.pinimg.com',
 			'source.unsplash.com',
+			'lh3.googleusercontent.com',
 		],
 	},
 	redirects: async () => {

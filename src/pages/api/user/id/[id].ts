@@ -1,5 +1,7 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
+import { IUserFull } from '../../../../interfaces/user';
+import { includeForIUserFull } from '../../../../utils/queryPrisma';
 
+import type { NextApiRequest, NextApiResponse } from 'next';
 export default async function userHandler(
 	req: NextApiRequest,
 	res: NextApiResponse
@@ -11,13 +13,11 @@ export default async function userHandler(
 
 	switch (method) {
 		case 'GET':
-			const returnedUser = await prisma.user.findUnique({
+			const returnedUser: IUserFull = await prisma.user.findUnique({
 				where: {
 					id: id as string,
 				},
-				include: {
-					sessions: true,
-				},
+				include: includeForIUserFull,
 			});
 
 			res.status(200).json({ ...returnedUser });

@@ -1,14 +1,17 @@
-import { User } from '@prisma/client';
 import { signOut } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import React, { use, useEffect, useState } from 'react';
 import { AiOutlineLogout } from 'react-icons/ai';
 
+import { IUserFull } from '../interfaces/user';
 import { useAccountId } from '../server/useAccount';
+import { DefaultImage } from './DefaultImage';
 import { Loading } from './Loading';
+import { MasonryLayout } from './MasonryLayout';
 
 interface IUserProfileComponentProps {
-	user: User;
+	user: IUserFull;
+	refresh: () => void;
 }
 
 const randomImage =
@@ -21,7 +24,9 @@ const notActiveBtnStyles =
 
 export const UserProfile = ({
 	user: ActualUser,
+	refresh,
 }: IUserProfileComponentProps) => {
+	const [posts, setPosts] = useState([]);
 	const [text, setText] = useState('');
 	const [activeBtn, setActiveBtn] = useState('');
 
@@ -32,8 +37,12 @@ export const UserProfile = ({
 
 	useEffect(() => {
 		if (text == 'Created') {
+			setPosts(user.posts);
 		}
 		if (text == 'Saved') {
+			const savedPosts = user.save.map((item) => item.post);
+
+			setPosts(savedPosts);
 		}
 	}, [text, id]);
 
@@ -49,10 +58,11 @@ export const UserProfile = ({
 							alt='banner'
 							className='w-full h-370 2xl:h-510 shadow-lg object-cover'
 						/>
-						<img
+						<DefaultImage
 							src={user.image}
-							className='rounded-full w-20 h-20 -mt-10 shadow-xl object-cover'
-							alt='profile'
+							classContent='rounded-full w-20 h-20 -mt-10 shadow-xl object-cover'
+							width={80}
+							height={80}
 						/>
 
 						<h1 className='font-bold text-3xl text-center mt-3'>{user.name}</h1>
@@ -91,6 +101,16 @@ export const UserProfile = ({
 							Saved
 						</button>
 					</div>
+
+					{posts.length ? (
+						<div className='px-2'>
+							<MasonryLayout user={user} posts={posts} refresh={refresh} />
+						</div>
+					) : (
+						<div className='flex justify-center font-bold w-full text-xl mt-2'>
+							No Posts Found!
+						</div>
+					)}
 				</div>
 			</div>
 		</div>

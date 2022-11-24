@@ -1,11 +1,13 @@
-import { User } from '@prisma/client';
 import axios from 'axios';
 import useSWR from 'swr';
+
+import { IUserFull } from '../interfaces/user';
+import { includeForIUserFull } from '../utils/queryPrisma';
 
 const fetcher = (url: string) => axios.get(url);
 
 interface IUseAccountReturn {
-	user: User;
+	user: IUserFull;
 	isLoading: boolean;
 	isError: boolean;
 }
@@ -28,4 +30,13 @@ export const useAccountId = (id: any): IUseAccountReturn => {
 		isLoading: !error && !data?.data,
 		isError: error,
 	};
+};
+
+export const getFullUserWithEmail = async (email: any) => {
+	return await prisma.user.findUnique({
+		where: {
+			email: email,
+		},
+		include: includeForIUserFull,
+	});
 };

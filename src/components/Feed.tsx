@@ -11,5 +11,7 @@ interface IFeedComponentProps {
 }
 
 export const Feed = ({ user, posts, refresh }: IFeedComponentProps) => {
+	if (!posts.length) return <h2>No Posts Available!</h2>;
+
 	return <MasonryLayout posts={posts} user={user} refresh={refresh} />;
 };

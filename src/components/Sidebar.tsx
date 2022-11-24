@@ -7,17 +7,9 @@ import { RiHomeFill } from 'react-icons/ri';
 import logo from '../assets/logo.png';
 import { ISidebarComponentProps } from '../interfaces/components/ISidebar';
 import { useAccount } from '../server/useAccount';
+import { categories } from '../utils/categoryData';
 import { DefaultImage } from './DefaultImage';
 import { Loading } from './Loading';
-
-const categories = [
-	{ name: 'Animals' },
-	{ name: 'Wallpapers' },
-	{ name: 'Photography' },
-	{ name: 'Gaming' },
-	{ name: 'Coding' },
-	{ name: 'Other' },
-];
 
 const isActiveStyle =
 	'flex items-center px-5 gap-3 text-gray-500 hover:text-black transition-all duration-200 ease-in-out capitalize cursor-pointer';
@@ -71,10 +63,16 @@ export const Sidebar = ({ closeToggle }: ISidebarComponentProps) => {
 							key={category.name}
 							onClick={handleCloseSidebar}
 							className={
-								router.asPath == `/pin/${category.name}`
+								router.asPath == `/category/${category.name}`
 									? isNotActiveStyle
 									: isActiveStyle
 							}>
+							<DefaultImage
+								src={category.image}
+								classContent='w-8 h-8 rounded-full shadow-sm'
+								width={500}
+								height={500}
+							/>
 							{category.name}
 						</Link>
 					))}

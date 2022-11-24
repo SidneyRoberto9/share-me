@@ -134,7 +134,7 @@ export const Pin = ({ post, user, refresh }: IPinComponentProps) => {
 			</div>
 
 			<Link
-				href={`/profile/${post.author.id}`}
+				href={`/profile/${post.authorId}`}
 				className='flex gap-2 mt-2 items-center'>
 				<DefaultImage
 					src={post.author.image}
