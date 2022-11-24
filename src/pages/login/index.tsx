@@ -26,8 +26,8 @@ const Login = () => {
 					<DefaultImage
 						src={logo}
 						classContent='w-[130px]'
-						width={96}
-						height={96}
+						width={500}
+						height={500}
 					/>
 				</div>
 
