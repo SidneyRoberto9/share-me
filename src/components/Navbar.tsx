@@ -2,7 +2,7 @@ import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
-import { IoMdAdd, IoMdSearch } from 'react-icons/io';
+import { IoMdAdd } from 'react-icons/io';
 
 import { INavbarComponentProps } from '../interfaces/components/INavbar';
 import { useAccount } from '../server/useAccount';
@@ -16,22 +16,13 @@ export const Navbar = ({
 	const { data } = useSession();
 	const { user, isLoading } = useAccount(data?.user.email);
 	const router = useRouter();
+	console.log(router.query.text);
 
 	if (isLoading) return <Loading />;
 
 	return (
 		<div className='flex gap-2 md:gap-5 w-full mt-5 pb-7'>
-			<div className='flex justify-start items-center w-full px-2 rounded-md bg-white border-none outline-none focus-within:shadow-sm'>
-				<IoMdSearch fontSize={21} className='ml-1' />
-				<input
-					type='text'
-					onChange={(e) => setSearchTerm(e.target.value)}
-					placeholder='Search'
-					value={searchTerm}
-					onFocus={(e) => router.push('/search')}
-					className='p-2 w-full bg-white outline-none '
-				/>
-			</div>
+			<div className='flex justify-start items-center w-full px-2 rounded-md bg-transparent border-none outline-none focus-within:shadow-sm'></div>
 			<div className='flex gap-3'>
 				{user.image && (
 					<Link href={`/profile/${user.id}`} className='hidden md:block'>
