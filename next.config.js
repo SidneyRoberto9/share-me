@@ -11,15 +11,6 @@ const nextConfig = {
 			'lh3.googleusercontent.com',
 		],
 	},
-	redirects: async () => {
-		return [
-			{
-				source: '/profile',
-				destination: '/',
-				permanent: true,
-			},
-		];
-	},
 };
 
 module.exports = nextConfig;
