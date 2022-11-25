@@ -59,6 +59,7 @@ interface HomeProps {
 }
 
 const Home = ({ userData, postData }: HomeProps) => {
+	console.log(1);
 	if (!userData || !postData) return <Loading />;
 
 	const user: IUserFull = JSON.parse(userData);
@@ -66,6 +67,7 @@ const Home = ({ userData, postData }: HomeProps) => {
 	const router = useRouter();
 	const refreshData = () => router.replace(router.asPath);
 
+	console.log(2);
 	return (
 		<Layout>
 			<Feed posts={posts} refresh={refreshData} user={user} />

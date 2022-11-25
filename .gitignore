@@ -38,4 +38,6 @@ next-env.d.ts
 Imgur Data.txt
 /public/uploads
 /public/uploads/*
+yarn.lock
+
 
