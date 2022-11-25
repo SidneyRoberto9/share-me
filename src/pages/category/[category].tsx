@@ -9,6 +9,26 @@ import { IUserFull } from '../../interfaces/user';
 import { getFullUserWithEmail } from '../../server/useAccount';
 import { validateAuthentication } from '../../utils/validateAuthentication';
 
+interface CategoryProps {
+	userData: string;
+	postData: string;
+}
+
+const PinPage = ({ postData, userData }: CategoryProps) => {
+	if (!userData || !postData) return <Loading />;
+
+	const user: IUserFull = JSON.parse(userData);
+	const posts: IPostFull[] = JSON.parse(postData);
+	const router = useRouter();
+	const refreshData = () => router.replace(router.asPath);
+
+	return (
+		<Layout>
+			<Feed posts={posts} refresh={refreshData} user={user} />
+		</Layout>
+	);
+};
+
 export const getServerSideProps: GetServerSideProps = async (context) => {
 	return validateAuthentication(context, async () => {
 		const sessionActive = await getSession(context);
@@ -57,26 +77,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 			},
 		};
 	});
-};
-
-interface CategoryProps {
-	userData: string;
-	postData: string;
-}
-
-const PinPage = ({ postData, userData }: CategoryProps) => {
-	if (!userData || !postData) return <Loading />;
-
-	const user: IUserFull = JSON.parse(userData);
-	const posts: IPostFull[] = JSON.parse(postData);
-	const router = useRouter();
-	const refreshData = () => router.replace(router.asPath);
-
-	return (
-		<Layout>
-			<Feed posts={posts} refresh={refreshData} user={user} />
-		</Layout>
-	);
 };
 
 export default PinPage;

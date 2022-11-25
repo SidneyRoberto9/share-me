@@ -8,22 +8,6 @@ import { IUserFull } from '../../interfaces/user';
 import { getFullUserWithEmail } from '../../server/useAccount';
 import { validateAuthentication } from '../../utils/validateAuthentication';
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-	return validateAuthentication(context, async () => {
-		const sessionActive = await getSession(context);
-
-		const loggedUser: IUserFull = await getFullUserWithEmail(
-			sessionActive.user.email
-		);
-
-		return {
-			props: {
-				userData: JSON.stringify(loggedUser),
-			},
-		};
-	});
-};
-
 interface ProfileProps {
 	userData: string;
 }
@@ -40,6 +24,22 @@ const Profile = ({ userData }: ProfileProps) => {
 			<UserProfile user={user} refresh={refreshData} />
 		</Layout>
 	);
+};
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+	return validateAuthentication(context, async () => {
+		const sessionActive = await getSession(context);
+
+		const loggedUser: IUserFull = await getFullUserWithEmail(
+			sessionActive.user.email
+		);
+
+		return {
+			props: {
+				userData: JSON.stringify(loggedUser),
+			},
+		};
+	});
 };
 
 export default Profile;
