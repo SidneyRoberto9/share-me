@@ -14,7 +14,6 @@ export default function Document() {
 					href='https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap'
 					rel='stylesheet'
 				/>
-				<title>Share - Me</title>
 			</Head>
 			<body className='bg-gray-50 bg-no-repeat bg-cover'>
 				<Main />
