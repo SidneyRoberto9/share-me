@@ -2,36 +2,29 @@ import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import { MdDownloadForOffline } from 'react-icons/md';
 
-import { IPostFull } from '../interfaces/posts';
-import { IUserFull } from '../interfaces/user';
-import { useAddComment, useGetPosts } from '../server/usePost';
+import { PostDetailComponentProps } from '../interfaces/components/IPost';
+import * as usePost from '../server/usePost';
 import { DefaultImage } from './DefaultImage';
 import { Loading } from './Loading';
 import { MasonryLayout } from './MasonryLayout';
 import { Spinner } from './Spinner';
 
-interface IPinDatailsComponent {
-	post: IPostFull;
-	user: IUserFull;
-	refreshData: () => void;
-}
-
-export const PinDetails = ({
+export const PostDetail = ({
 	post,
 	user,
 	refreshData,
-}: IPinDatailsComponent) => {
+}: PostDetailComponentProps) => {
 	const [comment, setComment] = useState<string>('');
 	const [addingComment, setAddingComment] = useState(null);
 
-	const { posts, isLoading } = useGetPosts();
+	const { posts, isLoading } = usePost.getPosts();
 
 	if (isLoading) return <Loading />;
 
 	const addComment = async () => {
 		if (comment) {
 			setAddingComment(true);
-			await useAddComment(post.id, comment, user.id);
+			await usePost.AddCommentInPost(post.id, comment, user.id);
 			refreshData();
 			setComment('');
 			setAddingComment(false);

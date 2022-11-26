@@ -1,11 +1,11 @@
-export { Pin } from './Pin';
+export { Post } from './Post';
 export { Feed } from './Feed';
 export { Navbar } from './Navbar';
 export { Layout } from './Layout';
 export { Spinner } from './Spinner';
 export { Sidebar } from './Sidebar';
 export { Loading } from './Loading';
-export { PinDetails } from './PinDetails';
+export { PostDetail } from './PostDetail';
 export { UserProfile } from './UserProfile';
 export { DefaultImage } from './DefaultImage';
 export { MasonryLayout } from './MasonryLayout';

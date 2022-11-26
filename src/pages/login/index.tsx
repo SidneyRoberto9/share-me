@@ -47,6 +47,7 @@ const Login = () => {
 		</div>
 	);
 };
+
 export const getServerSideProps: GetServerSideProps = async (context) => {
 	return validateLoginAuthentication(context, () => {
 		return {

@@ -1,6 +1,6 @@
 import { Comment, Post, Save, User } from '@prisma/client';
 
-import { IPostFull } from './posts';
+import { IPostFull } from './IUsePosts';
 
 export type IUserFull = {
 	id: string;
@@ -41,4 +41,10 @@ export type IUserFullWithout = {
 	posts: Post[];
 	comment: Comment[];
 	save: Save[];
+};
+
+export type IUseAccountReturn = {
+	user: IUserFull;
+	isLoading: boolean;
+	isError: boolean;
 };

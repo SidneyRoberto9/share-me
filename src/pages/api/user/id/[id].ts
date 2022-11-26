@@ -1,4 +1,4 @@
-import { IUserFull } from '../../../../interfaces/user';
+import { IUserFull } from '../../../../interfaces/server/IUseAccount';
 import { includeForIUserFull } from '../../../../utils/queryPrisma';
 
 import type { NextApiRequest, NextApiResponse } from 'next';

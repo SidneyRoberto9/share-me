@@ -3,18 +3,14 @@ import { useRouter } from 'next/router';
 import { GetServerSideProps } from 'next/types';
 import React from 'react';
 
-import { Layout, Loading, PinDetails } from '../../components';
-import { IPostFull } from '../../interfaces/posts';
-import { IUserFull } from '../../interfaces/user';
-import { getFullUserWithEmail } from '../../server/useAccount';
+import { Layout, Loading, PostDetail as Details } from '../../components';
+import { PostDetailProps } from '../../interfaces/pages/IPostDetail';
+import { IUserFull } from '../../interfaces/server/IUseAccount';
+import { IPostFull } from '../../interfaces/server/IUsePosts';
+import { getFullUserWithEmail } from '../../utils/queryPrisma';
 import { validateAuthentication } from '../../utils/validateAuthentication';
 
-interface PosteDetailProps {
-	userData: string;
-	postData: string;
-}
-
-const PinDetail = ({ postData, userData }: PosteDetailProps) => {
+const PostDetail = ({ postData, userData }: PostDetailProps) => {
 	if (!userData || !postData) return <Loading />;
 
 	const user: IUserFull = JSON.parse(userData);
@@ -24,8 +20,8 @@ const PinDetail = ({ postData, userData }: PosteDetailProps) => {
 	const refreshData = () => router.replace(router.asPath);
 
 	return (
-		<Layout>
-			<PinDetails post={post} user={user} refreshData={refreshData} />
+		<Layout user={user}>
+			<Details post={post} user={user} refreshData={refreshData} />
 		</Layout>
 	);
 };
@@ -34,10 +30,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 	return validateAuthentication(context, async () => {
 		const sessionActive = await getSession(context);
 		const { id } = context.query;
-
-		const loggedUser: IUserFull = await getFullUserWithEmail(
-			sessionActive.user.email
-		);
 
 		const returnedPost: IPostFull = await prisma.post.findUnique({
 			where: {
@@ -68,11 +60,13 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
 		return {
 			props: {
-				userData: JSON.stringify(loggedUser),
+				userData: JSON.stringify(
+					await getFullUserWithEmail(sessionActive.user.email)
+				),
 				postData: JSON.stringify(returnedPost),
 			},
 		};
 	});
 };
 
-export default PinDetail;
+export default PostDetail;

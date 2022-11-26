@@ -4,15 +4,11 @@ import { GetServerSideProps } from 'next/types';
 import React from 'react';
 
 import { Feed, Layout, Loading } from '../../components';
-import { IPostFull } from '../../interfaces/posts';
-import { IUserFull } from '../../interfaces/user';
-import { getFullUserWithEmail } from '../../server/useAccount';
+import { CategoryProps } from '../../interfaces/pages/ICategory';
+import { IUserFull } from '../../interfaces/server/IUseAccount';
+import { IPostFull } from '../../interfaces/server/IUsePosts';
+import { getFullUserWithEmail } from '../../utils/queryPrisma';
 import { validateAuthentication } from '../../utils/validateAuthentication';
-
-interface CategoryProps {
-	userData: string;
-	postData: string;
-}
 
 const PinPage = ({ postData, userData }: CategoryProps) => {
 	if (!userData || !postData) return <Loading />;
@@ -23,7 +19,7 @@ const PinPage = ({ postData, userData }: CategoryProps) => {
 	const refreshData = () => router.replace(router.asPath);
 
 	return (
-		<Layout>
+		<Layout user={user}>
 			<Feed posts={posts} refresh={refreshData} user={user} />
 		</Layout>
 	);
@@ -33,10 +29,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 	return validateAuthentication(context, async () => {
 		const sessionActive = await getSession(context);
 		const { category } = context.query;
-
-		const loggedUser: IUserFull = await getFullUserWithEmail(
-			sessionActive.user.email
-		);
 
 		const returnedPosts: IPostFull[] = await prisma.post.findMany({
 			where: {
@@ -72,7 +64,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
 		return {
 			props: {
-				userData: JSON.stringify(loggedUser),
+				userData: JSON.stringify(
+					await getFullUserWithEmail(sessionActive.user.email)
+				),
 				postData: JSON.stringify(returnedPosts),
 			},
 		};

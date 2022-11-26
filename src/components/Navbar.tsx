@@ -1,25 +1,11 @@
-import { useSession } from 'next-auth/react';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 import React from 'react';
 import { IoMdAdd } from 'react-icons/io';
 
-import { INavbarComponentProps } from '../interfaces/components/INavbar';
-import { useAccount } from '../server/useAccount';
+import { NavbarComponentProps } from '../interfaces/components/INavbar';
 import { DefaultImage } from './DefaultImage';
-import { Loading } from './Loading';
 
-export const Navbar = ({
-	searchTerm,
-	setSearchTerm,
-}: INavbarComponentProps) => {
-	const { data } = useSession();
-	const { user, isLoading } = useAccount(data?.user.email);
-	const router = useRouter();
-	console.log(router.query.text);
-
-	if (isLoading) return <Loading />;
-
+export const Navbar = ({ user }: NavbarComponentProps) => {
 	return (
 		<div className='flex gap-2 md:gap-5 w-full mt-5 pb-7'>
 			<div className='flex justify-start items-center w-full px-2 rounded-md bg-transparent border-none outline-none focus-within:shadow-sm'></div>

@@ -1,13 +1,13 @@
 import { GetServerSideProps } from 'next';
 import { useSession } from 'next-auth/react';
-import Router, { useRouter } from 'next/router';
+import { useRouter } from 'next/router';
 import React, { ChangeEvent, useState } from 'react';
 import { AiOutlineCloudUpload } from 'react-icons/ai';
 import { MdDelete } from 'react-icons/md';
 
 import { DefaultImage, Layout, Loading, Spinner } from '../../components';
 import { useAccount } from '../../server/useAccount';
-import { useCreatePost, useDeleteUploadPost, useUploadPost } from '../../server/usePost';
+import * as usePost from '../../server/usePost';
 import { categories } from '../../utils/categoryData';
 import { validateAuthentication } from '../../utils/validateAuthentication';
 
@@ -46,7 +46,7 @@ const Add = () => {
 
 			const formData = new FormData();
 			formData.append('media', selectedFile);
-			const { data } = await useUploadPost(formData);
+			const { data } = await usePost.uploadPost(formData);
 
 			setImageAsset(data.data);
 			setLoading(false);
@@ -56,7 +56,7 @@ const Add = () => {
 	};
 
 	const handleDeleteImage = async () => {
-		await useDeleteUploadPost(imageAsset.fileName);
+		await usePost.deleteUploadedPost(imageAsset.fileName);
 		setImageAsset(null);
 	};
 
@@ -79,7 +79,7 @@ const Add = () => {
 				email: user.email,
 			};
 
-			await useCreatePost(postData);
+			await usePost.createPost(postData);
 
 			router.push('/');
 		} else {
@@ -90,7 +90,7 @@ const Add = () => {
 	};
 
 	return (
-		<Layout>
+		<Layout user={user}>
 			<div className='flex flex-col justify-center items-center mt-5 lg:h-4/5'>
 				{fields && (
 					<p className='text-red-500 mb-5 text-xl transition-all duration-150 ease-in'>

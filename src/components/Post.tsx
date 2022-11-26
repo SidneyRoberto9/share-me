@@ -1,24 +1,15 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { AiTwotoneDelete } from 'react-icons/ai';
 import { BsFillArrowUpRightCircleFill } from 'react-icons/bs';
 import { MdDownloadForOffline } from 'react-icons/md';
 
-import { IPostFull } from '../interfaces/posts';
-import { IUserFull } from '../interfaces/user';
-import { useDeletePost } from '../server/usePost';
-import { useSavedPosts } from '../server/useSavedPosts';
+import { PinComponentProps } from '../interfaces/components/IPost';
+import * as usePost from '../server/usePost';
 import { DefaultImage } from './DefaultImage';
 
-interface IPinComponentProps {
-	post: IPostFull;
-	user: IUserFull;
-	refresh: () => void;
-}
-
-export const Pin = ({ post, user, refresh }: IPinComponentProps) => {
-	const useSaved = new useSavedPosts();
+export const Post = ({ post, user, refresh }: PinComponentProps) => {
 	const router = useRouter();
 
 	const [alreadySaved, setAlreadySaved] = useState(
@@ -29,12 +20,12 @@ export const Pin = ({ post, user, refresh }: IPinComponentProps) => {
 	const savePost = async () => {
 		setAlreadySaved(!alreadySaved);
 		if (!alreadySaved) {
-			await useSaved.savePost({
+			await usePost.savePost({
 				postId: post.id,
 				userEmail: user.email,
 			});
 		} else {
-			await useSaved.savePost({
+			await usePost.savePost({
 				postId: post.id,
 				userEmail: user.email,
 			});
@@ -43,7 +34,7 @@ export const Pin = ({ post, user, refresh }: IPinComponentProps) => {
 	};
 
 	const deletePost = async () => {
-		await useDeletePost(post.id);
+		await usePost.deletePostWithId(post.id);
 		refresh();
 		window.location.reload();
 	};
@@ -53,7 +44,7 @@ export const Pin = ({ post, user, refresh }: IPinComponentProps) => {
 			<div
 				onMouseEnter={() => setPostHovered(true)}
 				onMouseLeave={() => setPostHovered(false)}
-				onClick={() => router.push(`/pin-detail/${post.id}`)}
+				onClick={() => router.push(`/post-detail/${post.id}`)}
 				className='relative cursor-zoom-in w-auto hover:shadow-lg rounded-lg overflow-hidden transition-all duration-500 ease-in-out'>
 				{post.imageUrl && (
 					<DefaultImage

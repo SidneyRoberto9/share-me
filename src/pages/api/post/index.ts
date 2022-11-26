@@ -1,4 +1,4 @@
-import { IPostFull } from '../../../interfaces/posts';
+import { IPostFull } from '../../../interfaces/server/IUsePosts';
 
 import type { NextApiRequest, NextApiResponse } from 'next';
 export default async function postsHandler(

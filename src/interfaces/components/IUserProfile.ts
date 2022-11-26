@@ -1,5 +1,6 @@
 import { IUserFull } from '../server/IUseAccount';
 
-export type NavbarComponentProps = {
+export type UserProfileComponentProps = {
 	user: IUserFull;
+	refresh: () => void;
 };

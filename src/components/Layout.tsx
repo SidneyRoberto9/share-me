@@ -1,4 +1,3 @@
-import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { AiFillCloseCircle } from 'react-icons/ai';
@@ -6,25 +5,17 @@ import { HiMenu } from 'react-icons/hi';
 
 import logo from '../assets/logo.png';
 import { ILayoutContainerProps } from '../interfaces/components/ILayout';
-import { useAccount } from '../server/useAccount';
 import { DefaultImage } from './DefaultImage';
-import { Loading } from './Loading';
 import { Navbar } from './Navbar';
 import { Sidebar } from './Sidebar';
 
-export const Layout = ({ children }: ILayoutContainerProps) => {
-	const [searchTerm, setSearchTerm] = useState('');
+export const Layout = ({ user, children }: ILayoutContainerProps) => {
 	const [toggleSidebar, setToggleSidebar] = useState(false);
 	const scrollRef = useRef(null);
 
 	useEffect(() => {
 		scrollRef.current?.scrollTo(0, 0);
 	}, []);
-
-	const { data } = useSession();
-	const { user, isLoading } = useAccount(data?.user.email);
-
-	if (isLoading) return <Loading />;
 
 	return (
 		<div className='flex bg-gray-50 md:flex-row flex-col h-screen transition-height duration-75 ease-out'>
@@ -77,7 +68,7 @@ export const Layout = ({ children }: ILayoutContainerProps) => {
 			<div className='pb-2 flex-1 h-screen overflow-y-scroll' ref={scrollRef}>
 				<div className='px-2 md:px-5'>
 					<div className='bg-gray-50'>
-						<Navbar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+						<Navbar user={user} />
 					</div>
 
 					<div className='h-full'>{children}</div>

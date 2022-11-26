@@ -1,27 +1,12 @@
 import axios from 'axios';
 import useSWR from 'swr';
 
-import { IPostFull } from '../interfaces/posts';
+import { IPostDto, ISavePostDto, IUsePostReturn } from '../interfaces/server/IUsePosts';
 import { api } from './../lib/axios';
 
 const fetcher = (url: string) => axios.get(url);
 
-interface IUsePostReturn {
-	posts: IPostFull[];
-	isLoading: boolean;
-	isError: boolean;
-}
-
-interface IPostDto {
-	title: string;
-	destination: string;
-	category: string;
-	image: string;
-	imageName: string;
-	email: string;
-}
-
-export const useGetPosts = (): IUsePostReturn => {
+export const getPosts = (): IUsePostReturn => {
 	const { data, error } = useSWR(`/api/post/`, fetcher);
 
 	return {
@@ -31,13 +16,13 @@ export const useGetPosts = (): IUsePostReturn => {
 	};
 };
 
-export const useDeletePost = async (postId: string) => {
+export const deletePostWithId = async (postId: string) => {
 	await api.get(`/api/post/delete/${postId}`);
 
 	return;
 };
 
-export const useUploadPost = async (file: FormData) => {
+export const uploadPost = async (file: FormData) => {
 	const { data } = await api.post(`/api/post/upload`, file);
 
 	return {
@@ -45,7 +30,7 @@ export const useUploadPost = async (file: FormData) => {
 	};
 };
 
-export const useDeleteUploadPost = async (filename: String) => {
+export const deleteUploadedPost = async (filename: String) => {
 	const { data } = await api.post(
 		`/api/post/delete-upload`,
 		{
@@ -63,7 +48,7 @@ export const useDeleteUploadPost = async (filename: String) => {
 	};
 };
 
-export const useCreatePost = async (postDto: IPostDto) => {
+export const createPost = async (postDto: IPostDto) => {
 	const { data } = await api.post(`/api/post/add`, postDto);
 
 	return {
@@ -71,17 +56,7 @@ export const useCreatePost = async (postDto: IPostDto) => {
 	};
 };
 
-export const useGetPostById = (postId: string) => {
-	const { data, error } = useSWR(`/api/post/find/${postId}`, fetcher);
-
-	return {
-		post: data?.data.data,
-		isLoading: !error && !data?.data,
-		isError: error,
-	};
-};
-
-export const useAddComment = async (
+export const AddCommentInPost = async (
 	postId: string,
 	comment: string,
 	userId: string
@@ -93,5 +68,13 @@ export const useAddComment = async (
 
 	return {
 		data,
+	};
+};
+
+export const savePost = async (dto: ISavePostDto): Promise<any> => {
+	const { data } = await api.post(`/api/post/save`, dto);
+
+	return {
+		posts: data?.data,
 	};
 };

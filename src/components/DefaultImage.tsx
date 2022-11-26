@@ -1,19 +1,14 @@
-import Image, { StaticImageData } from 'next/image';
+import Image from 'next/image';
 import React from 'react';
 
-interface IDefaultImageComponentProps {
-	src: string | StaticImageData;
-	width: number;
-	height: number;
-	classContent?: string;
-}
+import { DefaultImageComponentProps } from '../interfaces/components/IDefaultImage';
 
 export const DefaultImage = ({
 	src,
 	width,
 	height,
 	classContent,
-}: IDefaultImageComponentProps) => {
+}: DefaultImageComponentProps) => {
 	return (
 		<Image
 			src={src}

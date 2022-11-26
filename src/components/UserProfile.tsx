@@ -1,18 +1,13 @@
 import { signOut } from 'next-auth/react';
 import { useRouter } from 'next/router';
-import React, { use, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { AiOutlineLogout } from 'react-icons/ai';
 
-import { IUserFull } from '../interfaces/user';
+import { UserProfileComponentProps } from '../interfaces/components/IUserProfile';
 import { useAccountId } from '../server/useAccount';
 import { DefaultImage } from './DefaultImage';
 import { Loading } from './Loading';
 import { MasonryLayout } from './MasonryLayout';
-
-interface IUserProfileComponentProps {
-	user: IUserFull;
-	refresh: () => void;
-}
 
 const randomImage =
 	'https://source.unsplash.com/1600x900/?nature,photography,technology';
@@ -25,7 +20,7 @@ const notActiveBtnStyles =
 export const UserProfile = ({
 	user: ActualUser,
 	refresh,
-}: IUserProfileComponentProps) => {
+}: UserProfileComponentProps) => {
 	const [posts, setPosts] = useState([]);
 	const [text, setText] = useState('');
 	const [activeBtn, setActiveBtn] = useState('');

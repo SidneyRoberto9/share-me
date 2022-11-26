@@ -1,13 +1,6 @@
-import { ImgurClient } from 'imgur';
-
 import { FormidableError, parseForm } from '../../../../lib/parse-form';
 
 import type { NextApiRequest, NextApiResponse } from 'next';
-const client = new ImgurClient({
-	clientId: process.env.IMGUR_CLIENT_ID,
-	clientSecret: process.env.IMGUR_CLIENT_SECRET,
-	refreshToken: process.env.IMGUR_CLIENT_REFRESH_TOKEN,
-});
 
 export default async function postsHandler(
 	req: NextApiRequest,
@@ -33,7 +26,7 @@ export default async function postsHandler(
 
 	if (method === 'POST') {
 		try {
-			const { fields, files } = await parseForm(req);
+			const { files } = await parseForm(req);
 
 			const file = files.media;
 
@@ -44,16 +37,6 @@ export default async function postsHandler(
 			const fileName = Array.isArray(file)
 				? file.map((f) => f.newFilename)
 				: file.newFilename;
-
-			// const { data } = await client.upload({
-			// 	image: createReadStream(directory as string) as any,
-			// 	title: fileName as string,
-			// 	type: 'stream',
-			// });
-
-			// const url = 'https://i.' + String(data.link).slice(10);
-
-			// unlinkSync(`public/uploads/${fileName}`);
 
 			res.status(200).json({
 				data: {

@@ -1,15 +1,8 @@
 import React from 'react';
 import Masonry from 'react-masonry-css';
 
-import { IPostFull } from '../interfaces/posts';
-import { IUserFull } from '../interfaces/user';
-import { Pin } from './Pin';
-
-interface IMasonryLayoutComponentProps {
-	user: IUserFull;
-	posts: IPostFull[];
-	refresh: () => void;
-}
+import { MasonryLayoutComponentProps } from '../interfaces/components/IMasonryLayout';
+import { Post } from './Post';
 
 const breakPointObj = {
 	default: 4,
@@ -24,11 +17,11 @@ export const MasonryLayout = ({
 	user,
 	posts,
 	refresh,
-}: IMasonryLayoutComponentProps) => {
+}: MasonryLayoutComponentProps) => {
 	return (
 		<Masonry className='flex animate-slide-fwd' breakpointCols={breakPointObj}>
 			{posts.map((pin) => {
-				return <Pin post={pin} user={user} refresh={refresh} key={pin.id} />;
+				return <Post post={pin} user={user} refresh={refresh} key={pin.id} />;
 			})}
 		</Masonry>
 	);
