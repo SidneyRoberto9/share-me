@@ -12,7 +12,8 @@ interface ILayoutContainerProps {
 }
 
 export const Layout = ({ children }: ILayoutContainerProps) => {
-	const [toggleSidebar, setToggleSidebar] = useState(false);
+	const [toggleSidebar, setToggleSidebar] = useState<boolean>(false);
+	const [search, setSearch] = useState<string>('');
 	const { loggedUser } = useAccount();
 	const scrollRef = useRef(null);
 
@@ -77,7 +78,7 @@ export const Layout = ({ children }: ILayoutContainerProps) => {
 			<div className='pb-2 flex-1 h-screen overflow-y-scroll' ref={scrollRef}>
 				<div className='px-2 md:px-5'>
 					<div className='bg-gray-50'>
-						<Navbar />
+						<Navbar search={search} setSearch={setSearch} />
 					</div>
 
 					<div className='h-full'>{children}</div>

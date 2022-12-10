@@ -1,15 +1,40 @@
-import React from 'react';
-import { IoMdAdd } from 'react-icons/io';
-import { Link } from 'react-router-dom';
+import React, { Dispatch, SetStateAction } from 'react';
+import { IoMdAdd, IoMdSearch } from 'react-icons/io';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { useAccount } from '../context/useAccount';
 
-export const Navbar = () => {
+export interface INavbarComponentProps {
+	search: string;
+	setSearch: Dispatch<SetStateAction<string>>;
+}
+
+export const Navbar = ({ search, setSearch }: INavbarComponentProps) => {
+	const navigate = useNavigate();
 	const { loggedUser } = useAccount();
+
+	const handleSearchTerm = () => {
+		navigate(`/search/${search}`);
+		setSearch('');
+	};
 
 	return (
 		<div className='flex gap-2 md:gap-5 w-full mt-5 pb-7'>
-			<div className='flex justify-start items-center w-full px-2 rounded-md bg-transparent border-none outline-none focus-within:shadow-sm'></div>
+			<div className='flex justify-start items-center w-full px-2 rounded-md bg-transparent border-none outline-none focus-within:shadow-sm'>
+				<IoMdSearch
+					fontSize={21}
+					className='ml-1 cursor-pointer'
+					onClick={handleSearchTerm}
+				/>
+				<input
+					type='text'
+					value={search}
+					className='p-2 w-full bg-white outline-none'
+					placeholder='Search'
+					onChange={(e) => setSearch(e.target.value)}
+					onKeyDown={(event) => event.key === 'Enter' && handleSearchTerm()}
+				/>
+			</div>
 			<div className='flex gap-3'>
 				{loggedUser && (
 					<Link to={`/profile/${loggedUser.id}`} className='hidden md:block'>
