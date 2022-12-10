@@ -1,5 +1,11 @@
 import React from 'react';
 
+import { Feed } from '../components';
+
 export const Home = () => {
-	return <div>home</div>;
+	return (
+		<>
+			<Feed />
+		</>
+	);
 };
