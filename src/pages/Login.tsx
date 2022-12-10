@@ -1,14 +1,13 @@
+import { CredentialResponse, GoogleLogin } from '@react-oauth/google';
 import jwt_decode from 'jwt-decode';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { CredentialResponse, GoogleLogin } from '@react-oauth/google';
-
-import logoWhite from '../assets/logowhite.png';
-import share from '../assets/share.mp4';
 import { useAccount } from '../context/useAccount';
 import { api } from '../lib/axios';
 import { GoogleLoginProps } from '../models/google.model';
+import logoWhite from '/logowhite.png';
+import share from '/share.mp4';
 
 export const Login = () => {
 	const navigate = useNavigate();

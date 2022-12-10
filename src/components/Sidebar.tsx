@@ -2,9 +2,9 @@ import React, { Dispatch, SetStateAction } from 'react';
 import { RiHomeFill } from 'react-icons/ri';
 import { Link, useLocation } from 'react-router-dom';
 
-import logo from '../assets/logo.png';
 import { useAccount } from '../context/useAccount';
 import { categories } from '../utils/category.data';
+import logo from '/logo.png';
 
 export interface ISidebarComponentProps {
 	closeToggle?: Dispatch<SetStateAction<boolean>>;
