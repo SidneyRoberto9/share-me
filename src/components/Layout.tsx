@@ -1,16 +1,19 @@
-import Link from 'next/link';
-import { useEffect, useRef, useState } from 'react';
+import React, { ReactNode, useEffect, useRef, useState } from 'react';
 import { AiFillCloseCircle } from 'react-icons/ai';
 import { HiMenu } from 'react-icons/hi';
+import { Link } from 'react-router-dom';
 
+import { Navbar, Sidebar } from '.';
 import logo from '../assets/logo.png';
-import { ILayoutContainerProps } from '../interfaces/components/ILayout';
-import { DefaultImage } from './DefaultImage';
-import { Navbar } from './Navbar';
-import { Sidebar } from './Sidebar';
+import { useAccount } from '../context/useAccount';
 
-export const Layout = ({ user, children }: ILayoutContainerProps) => {
+interface ILayoutContainerProps {
+	children: ReactNode;
+}
+
+export const Layout = ({ children }: ILayoutContainerProps) => {
 	const [toggleSidebar, setToggleSidebar] = useState(false);
+	const { loggedUser } = useAccount();
 	const scrollRef = useRef(null);
 
 	useEffect(() => {
@@ -30,23 +33,29 @@ export const Layout = ({ user, children }: ILayoutContainerProps) => {
 						className='cursor-pointer'
 						onClick={() => setToggleSidebar(true)}
 					/>
-					<Link href={'/'}>
-						<DefaultImage
+					<Link to={'/'}>
+						<img src={logo} alt='logo' className='w-28' />
+						{/* <DefaultImage
 							src={logo}
 							classContent='w-28'
 							width={500}
 							height={500}
-						/>
+						/> */}
 					</Link>
 
-					{user.image && (
-						<Link href={`/profile/${user.id}`}>
-							<DefaultImage
+					{loggedUser && (
+						<Link to={`/profile/${loggedUser.id}`}>
+							<img
+								src={loggedUser.image}
+								alt={loggedUser.name}
+								className='w-28'
+							/>
+							{/* <DefaultImage
 								src={user.image}
 								classContent='w-28'
 								width={96}
 								height={96}
-							/>
+							/> */}
 						</Link>
 					)}
 				</div>
@@ -68,7 +77,7 @@ export const Layout = ({ user, children }: ILayoutContainerProps) => {
 			<div className='pb-2 flex-1 h-screen overflow-y-scroll' ref={scrollRef}>
 				<div className='px-2 md:px-5'>
 					<div className='bg-gray-50'>
-						<Navbar user={user} />
+						<Navbar />
 					</div>
 
 					<div className='h-full'>{children}</div>
