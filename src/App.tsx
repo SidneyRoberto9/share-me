@@ -12,7 +12,7 @@ export default function App() {
 
 	return (
 		<>
-			{loggedUser ? (
+			{Object.entries(loggedUser).length > 0 ? (
 				<Layout>
 					<Routes>
 						<Route path='/' element={<Home />} />

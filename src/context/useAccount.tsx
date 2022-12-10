@@ -1,11 +1,5 @@
 import jwt_decode from 'jwt-decode';
-import {
-	createContext,
-	ReactNode,
-	useContext,
-	useEffect,
-	useState,
-} from 'react';
+import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 
 import { api } from '../lib/axios';
 import { GoogleLoginProps } from '../models/google.model';
@@ -25,7 +19,7 @@ type UserContextProps = {
 };
 
 export function UserContextProvider({ children }: UserContextProps) {
-	const [loggedUser, setLoggedUser] = useState<IUser>(null);
+	const [loggedUser, setLoggedUser] = useState<IUser>({} as IUser);
 
 	const loginUser = async (decode: GoogleLoginProps) => {
 		const { data } = await api.post('/auth', {
@@ -56,7 +50,7 @@ export function UserContextProvider({ children }: UserContextProps) {
 
 	return (
 		<UserContext.Provider value={{ loggedUser, setLoggedUser }}>
-			{children}
+			<>{children}</>
 		</UserContext.Provider>
 	);
 }

@@ -3,9 +3,9 @@ import { AiFillCloseCircle } from 'react-icons/ai';
 import { HiMenu } from 'react-icons/hi';
 import { Link } from 'react-router-dom';
 
-import { Navbar, Sidebar } from '.';
 import logo from '../assets/logo.png';
 import { useAccount } from '../context/useAccount';
+import { Navbar, Sidebar } from './';
 
 interface ILayoutContainerProps {
 	children: ReactNode;

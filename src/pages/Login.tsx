@@ -1,7 +1,8 @@
-import { CredentialResponse, GoogleLogin } from '@react-oauth/google';
 import jwt_decode from 'jwt-decode';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+
+import { CredentialResponse, GoogleLogin } from '@react-oauth/google';
 
 import logoWhite from '../assets/logowhite.png';
 import share from '../assets/share.mp4';
