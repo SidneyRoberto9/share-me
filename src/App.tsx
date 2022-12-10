@@ -4,13 +4,19 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import { Layout } from './components';
 import { useAccount } from './context/useAccount';
 import { Category, Home, Login, Search } from './pages';
+import { isEmpty } from './utils/validate.util';
 
 export default function App() {
 	const { loggedUser } = useAccount();
 
 	return (
 		<>
-			{Object.entries(loggedUser).length > 0 ? (
+			{isEmpty(loggedUser) ? (
+				<Routes>
+					<Route path='/login' element={<Login />} />
+					<Route path='*' element={<Navigate to='/login' />} />
+				</Routes>
+			) : (
 				<Layout>
 					<Routes>
 						<Route path='/' element={<Home />} />
@@ -19,11 +25,6 @@ export default function App() {
 						<Route path='*' element={<Navigate to='/' />} />
 					</Routes>
 				</Layout>
-			) : (
-				<Routes>
-					<Route path='/login' element={<Login />} />
-					<Route path='*' element={<Navigate to='/login' />} />
-				</Routes>
 			)}
 		</>
 	);

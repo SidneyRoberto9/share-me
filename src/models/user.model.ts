@@ -1,28 +1,22 @@
+import { IComment, IPost, ISave } from './post.model';
+
 export type IUser = {
 	id: string;
 	name: string;
 	email: string;
 	image: string;
-	posts: any[];
+	posts: IPost[];
 	comment: IComment[];
 	save: ISave[];
 };
 
-export type IComment = {
+export type IUserFullWithout = {
 	id: string;
-	text: string;
-	createdAt: Date;
-	authorId: string;
-	postId: string;
-	author: any;
-	post: any;
-};
-
-export type ISave = {
-	id: string;
-	createdAt: Date;
-	postId: string;
-	userId: string;
-	post: any;
-	user: any;
+	name: string;
+	email: string;
+	emailVerified: Date;
+	image: string;
+	posts: IUser[];
+	comment: IComment[];
+	save: ISave[];
 };
