@@ -43,4 +43,91 @@ export const userRouter = async (fastApp: FastifyInstance, options: any) => {
 			reply.code(200).send({ data: user });
 		}
 	);
+
+	fastApp.get<{ Params: IUserByIdParam }>(
+		'/created/:id',
+		async (request, reply) => {
+			const { id } = request.params;
+
+			const posts = await prismaClient.post.findMany({
+				where: {
+					authorId: id,
+				},
+				orderBy: {
+					createdAt: 'desc',
+				},
+				include: {
+					comment: {
+						include: {
+							author: true,
+							post: true,
+						},
+					},
+					save: {
+						include: {
+							user: true,
+							post: true,
+						},
+					},
+					author: {
+						include: {
+							comment: true,
+							posts: true,
+							save: true,
+						},
+					},
+				},
+			});
+
+			reply.code(200).send({ data: posts });
+		}
+	);
+
+	fastApp.get<{ Params: IUserByIdParam }>(
+		'/saved/:id',
+		async (request, reply) => {
+			const { id } = request.params;
+
+			const saves = await prismaClient.save.findMany({
+				where: {
+					userId: id,
+				},
+			});
+
+			const data: any[] = [];
+
+			saves.forEach(async (save) => {
+				const post = await prismaClient.post.findUnique({
+					where: {
+						id: save.postId,
+					},
+					include: {
+						comment: {
+							include: {
+								author: true,
+								post: true,
+							},
+						},
+						save: {
+							include: {
+								user: true,
+								post: true,
+							},
+						},
+						author: {
+							include: {
+								comment: true,
+								posts: true,
+								save: true,
+							},
+						},
+					},
+				});
+
+				data.push(post);
+			});
+
+			reply.code(200).send({ data: data });
+		}
+	);
 };

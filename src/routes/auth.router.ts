@@ -10,6 +10,11 @@ export const authRouter = async (fastApp: FastifyInstance, options: any) => {
 			where: {
 				email: email,
 			},
+			include: {
+				posts: true,
+				save: true,
+				comment: true,
+			},
 		});
 
 		if (user) {
