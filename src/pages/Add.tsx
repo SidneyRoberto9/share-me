@@ -11,6 +11,7 @@ import { categories } from '../utils/category.data';
 export const Add = () => {
 	const [title, setTitle] = useState('');
 	const [destination, setDestination] = useState('');
+	const [preview, setPreview] = useState(null);
 	const [category, setCategory] = useState('');
 	const [loading, setLoading] = useState(false);
 	const [fields, setFields] = useState(false);
@@ -41,6 +42,7 @@ export const Add = () => {
 			const formData = new FormData();
 			formData.append('media', selectedFile);
 			const filename = await uploadImage(formData);
+			filename.url = URL.createObjectURL(selectedFile);
 
 			setImageAsset(filename);
 			setLoading(false);

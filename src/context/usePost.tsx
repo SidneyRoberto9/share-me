@@ -1,10 +1,4 @@
-import React, {
-	createContext,
-	ReactNode,
-	useContext,
-	useEffect,
-	useState,
-} from 'react';
+import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 
 import { api } from '../lib/axios';
 import { IPostDto, IPostFull } from '../models/post.model';
@@ -31,7 +25,6 @@ export function PostContextProvider({ children }: PostContextProps) {
 
 	const getPosts = async () => {
 		const { data } = await api.get('/post');
-		console.log(data.data);
 		setPosts(data.data);
 	};
 
@@ -51,13 +44,12 @@ export function PostContextProvider({ children }: PostContextProps) {
 
 	const uploadImage = async (formData: FormData) => {
 		const { data } = await api.post('/post/upload', formData);
-		console.log(data);
 		return data.data;
 	};
 
-	const uploadImageDelete = async (filename: string) => {
+	const uploadImageDelete = async (fileName: string) => {
 		await api.post(`/post/delete`, {
-			filename: filename,
+			fileName: fileName,
 		});
 		getPosts();
 	};
