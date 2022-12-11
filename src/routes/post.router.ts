@@ -122,9 +122,10 @@ export const postRouter = async (fastApp: FastifyInstance, options: any) => {
 	});
 
 	fastApp.post<{ Body: ICommentBodyParam }>(
-		'/comment/',
+		'/comment/add',
 		async (request, reply) => {
 			const { text, postId, userId } = request.body;
+			console.log(request.body);
 
 			await prismaClient.comment.create({
 				data: {
