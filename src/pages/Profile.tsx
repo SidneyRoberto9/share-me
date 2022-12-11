@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { AiOutlineLogout } from 'react-icons/ai';
 import { useParams } from 'react-router-dom';
 
-import { Feed } from '../components';
+import { Feed, Spinner } from '../components';
 import { useAccount } from '../context/useAccount';
 import { IPostFull } from '../models/post.model';
 import { IUser } from '../models/user.model';
@@ -24,6 +24,7 @@ export const Profile = () => {
 	const [user, setUser] = useState<IUser>({} as IUser);
 	const [posts, setPosts] = useState<IPostFull[]>([]);
 	const [text, setText] = useState('');
+	const [loading, setLoading] = useState(false);
 	const [activeBtn, setActiveBtn] = useState('');
 
 	const handleCreatedPosts = async () => {
@@ -42,6 +43,7 @@ export const Profile = () => {
 	};
 
 	useEffect(() => {
+		setPosts([]);
 		if (text == 'Created') {
 			handleCreatedPosts();
 		}
@@ -113,7 +115,8 @@ export const Profile = () => {
 						</div>
 					) : (
 						<div className='flex justify-center font-bold w-full text-xl mt-2'>
-							No Posts Found!
+							No Posts Found! or Loading...
+							<Spinner />;
 						</div>
 					)}
 				</div>

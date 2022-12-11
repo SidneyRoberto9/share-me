@@ -27,6 +27,8 @@ export const PostDetail = ({ post }: IPostDetailComponentProps) => {
 		}
 	};
 
+	if (addingComment === true) return <Spinner />;
+
 	return (
 		<>
 			<div
