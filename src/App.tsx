@@ -3,8 +3,7 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 
 import { Layout } from './components';
 import { useAccount } from './context/useAccount';
-import { Add, Category, Home, Login, Search } from './pages';
-import { Profile } from './pages/profile';
+import { Add, Category, Home, Login, PostDetailsPage, Profile, Search } from './pages';
 import { isEmpty } from './utils/validate.util';
 
 export default function App() {
@@ -21,6 +20,7 @@ export default function App() {
 				<Layout>
 					<Routes>
 						<Route path='/' element={<Home />} />
+						<Route path='/details/:id' element={<PostDetailsPage />} />
 						<Route path='/add' element={<Add />} />
 						<Route path='/category/:name' element={<Category />} />
 						<Route path='/search/:content' element={<Search />} />

@@ -11,6 +11,7 @@ export interface PostContextData {
 	addPost: (post: IPostDto) => Promise<void>;
 	uploadImage: (formData: FormData) => Promise<any>;
 	uploadImageDelete: (filename: string) => Promise<void>;
+	comment: (text: string, postId: string, userId: string) => Promise<void>;
 }
 
 export const PostContext = createContext<PostContextData>(
@@ -57,8 +58,19 @@ export function PostContextProvider({ children }: PostContextProps) {
 		});
 		getPosts();
 	};
+
 	const addPost = async (postDto: IPostDto) => {
 		await api.post(`/post/add`, postDto);
+		getPosts();
+	};
+
+	const comment = async (text: string, postId: string, userId: string) => {
+		const body = {
+			text,
+			postId,
+			userId,
+		};
+		await api.post(`/post/comment/add`, body);
 		getPosts();
 	};
 
@@ -75,6 +87,7 @@ export function PostContextProvider({ children }: PostContextProps) {
 				uploadImage,
 				uploadImageDelete,
 				addPost,
+				comment,
 			}}>
 			<>{children}</>
 		</PostContext.Provider>

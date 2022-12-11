@@ -41,7 +41,7 @@ export const Post = ({ post }: PinComponentProps) => {
 			<div
 				onMouseEnter={() => setPostHovered(true)}
 				onMouseLeave={() => setPostHovered(false)}
-				onClick={() => navigate(`/post-detail/${post.id}`)}
+				onClick={() => navigate(`/details/${post.id}`)}
 				className='relative cursor-zoom-in w-auto hover:shadow-lg rounded-lg overflow-hidden transition-all duration-500 ease-in-out'>
 				<img
 					key={post.title}
