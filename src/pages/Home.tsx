@@ -1,11 +1,10 @@
 import React from 'react';
 
 import { Feed } from '../components';
+import { usePost } from '../context/usePost';
 
 export const Home = () => {
-	return (
-		<>
-			<Feed />
-		</>
-	);
+	const { Posts } = usePost();
+
+	return <Feed posts={Posts} />;
 };

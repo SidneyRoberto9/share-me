@@ -1,13 +1,15 @@
 import React from 'react';
 
 import { MasonryLayout } from '.';
-import { usePost } from '../context/usePost';
+import { IPostFull } from '../models/post.model';
 import { isEmpty } from '../utils/validate.util';
 
-export const Feed = () => {
-	const { Posts } = usePost();
+interface IFeedComponentProps {
+	posts: IPostFull[];
+}
 
-	if (isEmpty(Posts)) return <div>loading</div>;
+export const Feed = ({ posts }: IFeedComponentProps) => {
+	if (isEmpty(posts)) return <div>loading</div>;
 
-	return <MasonryLayout posts={Posts} />;
+	return <MasonryLayout posts={posts} />;
 };

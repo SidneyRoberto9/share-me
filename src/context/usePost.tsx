@@ -1,12 +1,21 @@
-import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
+import React, {
+	createContext,
+	ReactNode,
+	useContext,
+	useEffect,
+	useState,
+} from 'react';
 
 import { api } from '../lib/axios';
-import { IPostFull } from '../models/post.model';
+import { IPostDto, IPostFull } from '../models/post.model';
 
 export interface PostContextData {
 	Posts: IPostFull[];
 	save: (postId: string, userId: string) => Promise<void>;
 	postDelete: (postId: string) => Promise<void>;
+	addPost: (post: IPostDto) => Promise<void>;
+	uploadImage: (formData: FormData) => Promise<any>;
+	uploadImageDelete: (filename: string) => Promise<void>;
 }
 
 export const PostContext = createContext<PostContextData>(
@@ -22,6 +31,7 @@ export function PostContextProvider({ children }: PostContextProps) {
 
 	const getPosts = async () => {
 		const { data } = await api.get('/post');
+		console.log(data.data);
 		setPosts(data.data);
 	};
 
@@ -30,12 +40,29 @@ export function PostContextProvider({ children }: PostContextProps) {
 			postId,
 			userId,
 		};
-		await api.post(`/posts/save`, body);
+		await api.post(`/post/save`, body);
 		getPosts();
 	};
 
 	const postDelete = async (postId: string) => {
-		await api.delete(`/posts/${postId}`);
+		await api.get(`/post/delete/${postId}`);
+		getPosts();
+	};
+
+	const uploadImage = async (formData: FormData) => {
+		const { data } = await api.post('/post/upload', formData);
+		console.log(data);
+		return data.data;
+	};
+
+	const uploadImageDelete = async (filename: string) => {
+		await api.post(`/post/delete`, {
+			filename: filename,
+		});
+		getPosts();
+	};
+	const addPost = async (postDto: IPostDto) => {
+		await api.post(`/post/add`, postDto);
 		getPosts();
 	};
 
@@ -44,7 +71,15 @@ export function PostContextProvider({ children }: PostContextProps) {
 	}, []);
 
 	return (
-		<PostContext.Provider value={{ Posts, save, postDelete }}>
+		<PostContext.Provider
+			value={{
+				Posts,
+				save,
+				postDelete,
+				uploadImage,
+				uploadImageDelete,
+				addPost,
+			}}>
 			<>{children}</>
 		</PostContext.Provider>
 	);

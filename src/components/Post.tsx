@@ -19,7 +19,7 @@ export const Post = ({ post }: PinComponentProps) => {
 
 	const [postHovered, setPostHovered] = useState(false);
 	const [alreadySaved, setAlreadySaved] = useState(
-		user.save.find((item) => item.postId === post.id) ? true : false
+		user.save?.find((item) => item.postId === post.id) ? true : false
 	);
 
 	const savePost = async () => {
