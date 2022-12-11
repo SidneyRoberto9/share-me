@@ -92,40 +92,34 @@ export const userRouter = async (fastApp: FastifyInstance, options: any) => {
 				where: {
 					userId: id,
 				},
-			});
-
-			const data: any[] = [];
-
-			saves.forEach(async (save) => {
-				const post = await prismaClient.post.findUnique({
-					where: {
-						id: save.postId,
-					},
-					include: {
-						comment: {
-							include: {
-								author: true,
-								post: true,
+				include: {
+					post: {
+						include: {
+							comment: {
+								include: {
+									author: true,
+									post: true,
+								},
 							},
-						},
-						save: {
-							include: {
-								user: true,
-								post: true,
+							save: {
+								include: {
+									user: true,
+									post: true,
+								},
 							},
-						},
-						author: {
-							include: {
-								comment: true,
-								posts: true,
-								save: true,
+							author: {
+								include: {
+									comment: true,
+									posts: true,
+									save: true,
+								},
 							},
 						},
 					},
-				});
-
-				data.push(post);
+				},
 			});
+
+			const data = saves.map((save) => save.post);
 
 			reply.code(200).send({ data: data });
 		}
