@@ -1,9 +1,12 @@
 import { FastifyInstance } from 'fastify';
 import { createReadStream, createWriteStream, unlinkSync } from 'fs';
-import pump from 'pump';
+import { pipeline } from 'stream';
+import util from 'util';
 
 import { ImgurClient } from '../lib/imgur';
 import { prismaClient } from '../lib/prisma';
+
+const pump = util.promisify(pipeline);
 
 export const postRouter = async (fastApp: FastifyInstance, options: any) => {
 	fastApp.get('/', async (request, reply) => {
@@ -140,7 +143,7 @@ export const postRouter = async (fastApp: FastifyInstance, options: any) => {
 		async (request, reply) => {
 			const { fileName } = request.body;
 
-			unlinkSync(`public/uploads/${fileName}`);
+			unlinkSync(`./src/tmp/${fileName}`);
 
 			reply.code(200).send({ data: 'ok' });
 		}
@@ -156,10 +159,10 @@ export const postRouter = async (fastApp: FastifyInstance, options: any) => {
 			},
 		});
 
-		const imagePath = `public/uploads/${imageName}`;
+		const imagePath = `./src/tmp/${imageName}`;
 
 		const { data } = await ImgurClient.upload({
-			image: createReadStream(image) as any,
+			image: createReadStream(imagePath) as any,
 			title: title,
 			type: 'stream',
 		});
@@ -191,13 +194,18 @@ export const postRouter = async (fastApp: FastifyInstance, options: any) => {
 			if (data) {
 				const fileName = `${data.filename}-${Date.now()}-${Math.round(
 					Math.random() * 1e9
-				)}.${data.mimetype}`;
+				)}.${data.mimetype.split('/')[1]}`;
 
 				data.filename = fileName;
 
-				await pump(data.file, createWriteStream('../tmp/' + data.filename));
+				pump(data.file, createWriteStream('./src/tmp/' + data.filename));
 
-				reply.code(200).send({ data: fileName });
+				reply.code(200).send({
+					data: {
+						directory: './src/tmp/',
+						fileName: fileName,
+					},
+				});
 			}
 		} catch (e) {
 			reply.code(500).send({ data: null, error: 'Internal Server Error' });
