@@ -123,7 +123,7 @@ export const Post = ({ post }: PinComponentProps) => {
 				className='flex gap-2 mt-2 items-center'>
 				<img
 					alt='author image'
-					src={post.author.image}
+					src={post.author?.image}
 					className='w-8 h-8 rounded-full object-cover'
 				/>
 

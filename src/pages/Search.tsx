@@ -9,7 +9,7 @@ export const Search = () => {
 	const { Posts } = usePost();
 
 	const filteredPosts = Posts.filter((post) =>
-		post.title.toLowerCase().includes(content.toLowerCase())
+		post.title.toLowerCase().includes(content?.toLowerCase())
 	);
 	return (
 		<div className='flex flex-col gap-2'>

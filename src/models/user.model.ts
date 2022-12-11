@@ -1,13 +1,13 @@
-import { IComment, IPost, ISave } from './post.model';
+import { IComment, ISave } from './post.model';
 
 export type IUser = {
 	id: string;
 	name: string;
 	email: string;
 	image: string;
-	posts: IPost[];
-	comment: IComment[];
-	save: ISave[];
+	posts: any[];
+	comment: any[];
+	save: any[];
 };
 
 export type IUserFullWithout = {

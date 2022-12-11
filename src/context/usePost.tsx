@@ -2,6 +2,7 @@ import React, { createContext, ReactNode, useContext, useEffect, useState } from
 
 import { api } from '../lib/axios';
 import { IPostDto, IPostFull } from '../models/post.model';
+import { useAccount } from './useAccount';
 
 export interface PostContextData {
 	Posts: IPostFull[];
@@ -23,6 +24,8 @@ type PostContextProps = {
 export function PostContextProvider({ children }: PostContextProps) {
 	const [Posts, setPosts] = useState<IPostFull[]>([]);
 
+	const { update } = useAccount();
+
 	const getPosts = async () => {
 		const { data } = await api.get('/post');
 		setPosts(data.data);
@@ -35,6 +38,7 @@ export function PostContextProvider({ children }: PostContextProps) {
 		};
 		await api.post(`/post/save`, body);
 		getPosts();
+		update();
 	};
 
 	const postDelete = async (postId: string) => {

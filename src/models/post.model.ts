@@ -57,6 +57,17 @@ export type IPost = {
 	save: any[];
 };
 
+export type IPostSimple = {
+	id: string;
+	title: string;
+	imageUrl: string;
+	imageHash: string;
+	category: string;
+	destination: string;
+	createdAt: Date;
+	authorId: string;
+};
+
 export type ISaveFull = {
 	id: string;
 	createdAt: Date;
@@ -64,6 +75,12 @@ export type ISaveFull = {
 	userId: string;
 	post: IPost;
 	user: IUser;
+};
+export type ISaveSimple = {
+	id: string;
+	createdAt: Date;
+	postId: string;
+	userId: string;
 };
 
 export type IUsePostReturn = {

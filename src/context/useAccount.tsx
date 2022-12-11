@@ -3,11 +3,17 @@ import React, { createContext, ReactNode, useContext, useEffect, useState } from
 
 import { api } from '../lib/axios';
 import { GoogleLoginProps } from '../models/google.model';
+import { IPostFull } from '../models/post.model';
 import { IUser } from '../models/user.model';
 
 export interface UserContextData {
 	loggedUser: IUser;
+	update: () => void;
 	setLoggedUser: (user: IUser) => void;
+	getSaved: (id: string) => Promise<IPostFull[]>;
+	getCreated: (id: string) => Promise<IPostFull[]>;
+	getUser: (id: string) => Promise<IUser>;
+	signOut: () => void;
 }
 
 export const UserContext = createContext<UserContextData>(
@@ -28,17 +34,36 @@ export function UserContextProvider({ children }: UserContextProps) {
 			image: decode.picture,
 		});
 
-		const { email, id, image, name, comment, posts, save } = data.data;
+		setLoggedUser({ ...data.data });
+	};
 
-		setLoggedUser({
-			id: id,
-			email: email,
-			image: image,
-			name: name,
-			comment: comment,
-			posts: posts,
-			save: save,
-		});
+	const update = async () => {
+		const { data } = await api.get('/user/id/' + loggedUser.id);
+
+		setLoggedUser({ ...data.data });
+	};
+
+	const getSaved = async (id: string) => {
+		const { data } = await api.get(`/user/saved/${id}`);
+
+		return data.data;
+	};
+
+	const getCreated = async (id: string) => {
+		const { data } = await api.get(`/user/created/${id}`);
+
+		return data.data;
+	};
+
+	const getUser = async (id: string) => {
+		const { data } = await api.get(`/user/id/${id}`);
+
+		return data.data;
+	};
+
+	const signOut = () => {
+		localStorage.removeItem('account');
+		setLoggedUser({} as IUser);
 	};
 
 	useEffect(() => {
@@ -49,7 +74,16 @@ export function UserContextProvider({ children }: UserContextProps) {
 	}, []);
 
 	return (
-		<UserContext.Provider value={{ loggedUser, setLoggedUser }}>
+		<UserContext.Provider
+			value={{
+				loggedUser,
+				setLoggedUser,
+				getSaved,
+				getCreated,
+				getUser,
+				signOut,
+				update,
+			}}>
 			<>{children}</>
 		</UserContext.Provider>
 	);
