@@ -1,4 +1,4 @@
-import jwt_decode from 'jwt-decode';
+import jwtDecode from 'jwt-decode';
 import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 
 import { api } from '../lib/axios';
@@ -8,11 +8,13 @@ import { IUser } from '../models/user.model';
 
 export interface UserContextData {
 	loggedUser: IUser;
+	loading: boolean;
 	update: () => void;
 	setLoggedUser: (user: IUser) => void;
 	getSaved: (id: string) => Promise<IPostFull[]>;
 	getCreated: (id: string) => Promise<IPostFull[]>;
 	getUser: (id: string) => Promise<IUser>;
+	signIn: (decode: GoogleLoginProps) => void;
 	signOut: () => void;
 }
 
@@ -26,8 +28,20 @@ type UserContextProps = {
 
 export function UserContextProvider({ children }: UserContextProps) {
 	const [loggedUser, setLoggedUser] = useState<IUser>({} as IUser);
+	const [loading, setLoading] = useState(true);
 
-	const loginUser = async (decode: GoogleLoginProps) => {
+	useEffect(() => {
+		const account = localStorage.getItem('account');
+
+		if (account) {
+			const decode = JSON.parse(account);
+			signIn(jwtDecode(decode));
+		} else {
+			setLoading(false);
+		}
+	}, []);
+
+	const signIn = async (decode: GoogleLoginProps) => {
 		const { data } = await api.post('/auth', {
 			name: decode.name,
 			email: decode.email,
@@ -35,6 +49,12 @@ export function UserContextProvider({ children }: UserContextProps) {
 		});
 
 		setLoggedUser({ ...data.data });
+		setLoading(false);
+	};
+
+	const signOut = () => {
+		localStorage.removeItem('account');
+		setLoggedUser({} as IUser);
 	};
 
 	const update = async () => {
@@ -61,30 +81,20 @@ export function UserContextProvider({ children }: UserContextProps) {
 		return data.data;
 	};
 
-	const signOut = () => {
-		localStorage.removeItem('account');
-		setLoggedUser({} as IUser);
-	};
-
-	useEffect(() => {
-		const localStorage = JSON.parse(window.localStorage.getItem('account'));
-		if (localStorage) {
-			loginUser(jwt_decode(localStorage));
-		}
-	}, []);
-
 	return (
 		<UserContext.Provider
 			value={{
 				loggedUser,
+				loading,
 				setLoggedUser,
 				getSaved,
 				getCreated,
 				getUser,
+				signIn,
 				signOut,
 				update,
 			}}>
-			<>{children}</>
+			{children}
 		</UserContext.Provider>
 	);
 }

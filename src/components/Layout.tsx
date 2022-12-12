@@ -1,7 +1,7 @@
 import React, { ReactNode, useEffect, useRef, useState } from 'react';
 import { AiFillCloseCircle } from 'react-icons/ai';
 import { HiMenu } from 'react-icons/hi';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 import { useAccount } from '../context/useAccount';
 import { Navbar, Sidebar } from './';
@@ -12,6 +12,12 @@ interface ILayoutContainerProps {
 }
 
 export const Layout = ({ children }: ILayoutContainerProps) => {
+	const location = useLocation();
+
+	if (location.pathname == '/login') {
+		return <div className='flex flex-col h-screen'>{children}</div>;
+	}
+
 	const [toggleSidebar, setToggleSidebar] = useState<boolean>(false);
 	const [search, setSearch] = useState<string>('');
 	const { loggedUser } = useAccount();

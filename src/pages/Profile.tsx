@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { AiOutlineLogout } from 'react-icons/ai';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import { Feed, Spinner } from '../components';
 import { useAccount } from '../context/useAccount';
@@ -18,18 +18,23 @@ const notActiveBtnStyles =
 
 export const Profile = () => {
 	const { id } = useParams();
+	const navigate = useNavigate();
 
 	const { getSaved, getCreated, getUser, loggedUser, signOut } = useAccount();
 
 	const [user, setUser] = useState<IUser>({} as IUser);
 	const [posts, setPosts] = useState<IPostFull[]>([]);
 	const [text, setText] = useState('');
-	const [loading, setLoading] = useState(false);
 	const [activeBtn, setActiveBtn] = useState('');
 
 	const handleCreatedPosts = async () => {
 		const data = await getCreated(id);
 		setPosts(data);
+	};
+
+	const handleSignOut = () => {
+		signOut();
+		navigate('/');
 	};
 
 	const handleSavedPosts = async () => {
@@ -78,7 +83,7 @@ export const Profile = () => {
 								<button
 									type='button'
 									className=' bg-white p-2 rounded-full cursor-pointer outline-none shadow-md'
-									onClick={() => signOut()}>
+									onClick={handleSignOut}>
 									<AiOutlineLogout color='red' fontSize={21} />
 								</button>
 							)}
@@ -114,9 +119,11 @@ export const Profile = () => {
 							<Feed posts={posts} />
 						</div>
 					) : (
-						<div className='flex justify-center font-bold w-full text-xl mt-2'>
-							No Posts Found! or Loading...
-							<Spinner />;
+						<div className='flex flex-col justify-center items-center mt-4'>
+							<Spinner />
+							<span className='font-bold text-xl text-center '>
+								No Posts Found! or Loading...
+							</span>
 						</div>
 					)}
 				</div>
